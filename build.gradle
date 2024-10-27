@@ -1,0 +1,40 @@
+import groovy.json.JsonBuilder
+
+plugins {
+    id 'java'
+}
+
+group = 'io.github.zpiboo.mpkspeedrun'
+version = '1.0-SNAPSHOT'
+var mainClassPath = 'io.github.zpiboo.mpkspeedrun.MPKSpeedrun'
+
+tasks.withType(JavaCompile).configureEach {
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    compileOnly 'org.apache.logging.log4j:log4j-api:2.24.1'
+    compileOnly 'org.apache.logging.log4j:log4j-core:2.24.1'
+
+    compileOnly 'com.github.kurrycat2004:MPKMod_2:2.0.0-pre.11'
+}
+
+jar {
+    var config = file("$temporaryDir/mpkmodule.config.json")
+    var jsonBuilder = new JsonBuilder()
+
+    jsonBuilder {
+        moduleName "mpkspeedrun"
+        mainClass mainClassPath
+    }
+
+    config.text = jsonBuilder.toPrettyString()
+    from config
+}
