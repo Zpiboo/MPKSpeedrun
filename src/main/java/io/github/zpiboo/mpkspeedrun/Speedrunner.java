@@ -8,9 +8,9 @@ import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 
 import java.util.List;
 
-public class SpeedrunLabels {
+public class Speedrunner {
     @InfoString.AccessInstance
-    public static final SpeedrunLabels instance = new SpeedrunLabels();
+    public static final Speedrunner instance = new Speedrunner();
 
     public int groundtime = 0;
     public int runTicks = 0;

@@ -11,10 +11,10 @@ public class MPKSpeedrun implements MPKModule {
     public static final Logger LOGGER = LogManager.getLogger(MODULE_NAME);
 
     public void init() {
-        InfoString.loadInfoVars(SpeedrunLabels.class);
+        InfoString.loadInfoVars(Speedrunner.class);
     }
 
     public void loaded() {
-        EventAPI.addListener(EventAPI.EventListener.onTickEnd(SpeedrunLabels::onTickEnd));
+        EventAPI.addListener(EventAPI.EventListener.onTickEnd(Speedrunner::onTickEnd));
     }
 }
