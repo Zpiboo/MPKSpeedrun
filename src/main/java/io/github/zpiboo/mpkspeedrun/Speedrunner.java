@@ -5,6 +5,7 @@ import io.github.kurrycat.mpkmod.compatibility.MCClasses.Keyboard;
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.events.OnTickEndEvent;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
+import io.github.zpiboo.mpkspeedrun.parkourmaps.Map;
 
 import java.util.List;
 
@@ -17,14 +18,58 @@ public class Speedrunner {
 
     public boolean isMoving = false;
 
+    private static Map currentMap = null;
+    private boolean isTimed = false;
+    private int timer = 0;
+
+
     @InfoString.Getter
     public int getGroundtime() {
         return groundtime;
     }
+
     @InfoString.Getter
     public int getRunTicks() {
         return runTicks;
     }
+
+    @InfoString.Getter
+    public String getTimer() {
+        final int seconds = this.timer / 20;
+        final int milliseconds = (this.timer % 20)*50;
+
+        String zeroes = "";
+        if (milliseconds == 0) zeroes = "00";
+        else if (milliseconds == 50) zeroes = "0";
+
+        return seconds + "." + zeroes + milliseconds + "s";
+    }
+
+
+    private Map getCurrentMap() {
+        return currentMap;
+    }
+    public static void setCurrentMap(Map map) {
+        currentMap = map;
+    }
+
+    private boolean isTimed() {
+        return isTimed;
+    }
+    private void setTimed(boolean isTimed) {
+        this.isTimed = isTimed;
+    }
+
+    public int getTimeInTicks() {
+        return timer;
+    }
+    private void incrementTimer() {
+        timer++;
+    }
+    private void resetTimer() {
+        timer = 0;
+    }
+
 
     public static void onTickEnd(OnTickEndEvent evt) {
         Player currentPlayer = Player.getLatest();
@@ -54,6 +99,24 @@ public class Speedrunner {
                         instance.runTicks = 1;
                 else
                     instance.runTicks = 0;
+        }
+
+
+        Map pkMap = instance.getCurrentMap();
+
+        if (instance.isTimed()) {
+            instance.incrementTimer();
+
+            boolean shouldFinishMap = pkMap.getFinish().shouldTrigger(currentPlayer);
+            if (shouldFinishMap) {
+                instance.setTimed(false);
+            }
+        }
+
+        boolean shouldStartMap = pkMap.getStart().shouldTrigger(currentPlayer);
+        if (shouldStartMap) {
+            instance.resetTimer();
+            instance.setTimed(true);
         }
     }
 }
