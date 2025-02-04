@@ -46,10 +46,11 @@ public class Speedrunner {
     }
 
 
-    private Map getCurrentMap() {
+    @InfoString.Getter
+    public Map getCurrentMap() {
         return currentMap;
     }
-    public static void setCurrentMap(Map map) {
+    public void setCurrentMap(Map map) {
         currentMap = map;
     }
 
@@ -103,6 +104,9 @@ public class Speedrunner {
 
 
         Map pkMap = instance.getCurrentMap();
+        if (pkMap == null) return;
+
+        
 
         if (instance.isTimed()) {
             instance.incrementTimer();

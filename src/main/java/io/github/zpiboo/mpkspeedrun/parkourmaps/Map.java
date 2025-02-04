@@ -1,10 +1,19 @@
 package io.github.zpiboo.mpkspeedrun.parkourmaps;
 
+import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
+import io.github.kurrycat.mpkmod.util.BoundingBox3D;
+
+@InfoString.DataClass
 public class Map {
     private String name;
 
     private TriggerZone start;
     private TriggerZone finish;
+
+    @InfoString.Getter
+    public BoundingBox3D getStartBox() { return start.getZone(); }
+    @InfoString.Getter
+    public BoundingBox3D getFinishBox() { return finish.getZone(); }
 
     public Map(String name, TriggerZone start, TriggerZone finish) {
         this.name = name;
@@ -13,6 +22,7 @@ public class Map {
         this.finish = finish;
     }
 
+    @InfoString.Getter
     public String getName() {
         return name;
     }
