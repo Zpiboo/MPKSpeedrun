@@ -8,6 +8,7 @@ import io.github.kurrycat.mpkmod.modules.MPKModule;
 import io.github.kurrycat.mpkmod.util.ClassUtil;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.Map;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.gui.PkMapsGUIScreen;
+import io.github.zpiboo.mpkspeedrun.util.FileUtil;
 
 import java.lang.reflect.Field;
 import java.util.Set;
@@ -35,6 +36,7 @@ public class MPKSpeedrun implements MPKModule {
             Main.infoTree = InfoString.createInfoTree();
         } catch (ReflectiveOperationException e) { e.printStackTrace(); }
 
+        FileUtil.init();
 
         API.registerGUIScreen("maps_gui", new PkMapsGUIScreen());
     }
