@@ -106,8 +106,6 @@ public class Speedrunner {
         Map pkMap = instance.getCurrentMap();
         if (pkMap == null) return;
 
-        
-
         if (instance.isTimed()) {
             instance.incrementTimer();
 
