@@ -28,10 +28,8 @@ public class MPKSpeedrun implements MPKModule {
             @SuppressWarnings("unchecked")
             Set<Class<?>> classes = (Set<Class<?>>) classesField.get(null);
 
-            classes.addAll(Set.of(
-                Speedrunner.class,
-                Map.class
-            ));
+            classes.add(Speedrunner.class);
+            classes.add(Map.class);
 
             Main.infoTree = InfoString.createInfoTree();
         } catch (ReflectiveOperationException e) { e.printStackTrace(); }

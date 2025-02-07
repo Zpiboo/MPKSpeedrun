@@ -2,6 +2,7 @@ package io.github.zpiboo.mpkspeedrun.parkourmaps;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -86,7 +87,7 @@ public class Map {
     public void save() {
         Path filePath = getFilePath();
         try {
-            Files.writeString(filePath, toJson().toString(2));
+            Files.write(filePath, toJson().toString(2).getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             MPKSpeedrun.LOGGER.error("Failed to create file: " + filePath + " - " + e.getMessage(), e);
         }
@@ -100,7 +101,9 @@ public class Map {
         }
 
         try {
-            Map pkMap = fromJson( new JSONObject(Files.readString(filePath)) );
+            Map pkMap = fromJson(new JSONObject(
+                new String(Files.readAllBytes(filePath), StandardCharsets.UTF_8)
+            ));
             pkMap.setName(mapName);
 
             return pkMap;
