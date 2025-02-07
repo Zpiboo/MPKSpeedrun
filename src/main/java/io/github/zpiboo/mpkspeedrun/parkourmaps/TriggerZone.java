@@ -1,5 +1,7 @@
 package io.github.zpiboo.mpkspeedrun.parkourmaps;
 
+import java.util.Arrays;
+
 import org.json.JSONObject;
 
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
@@ -18,7 +20,11 @@ public class TriggerZone {
         POS_ENTER,
         BOX_ENTER,
         POS_EXIT,
-        BOX_EXIT
+        BOX_EXIT;
+
+        public TriggerMode getNext() {
+            return values()[(Arrays.asList(values()).indexOf(this) + 1) % values().length];
+        }
     }
 
     public TriggerZone(BoundingBox3D zone, TriggerMode mode) {
@@ -34,6 +40,13 @@ public class TriggerZone {
     }
     public void setZone(BoundingBox3D zone) {
         this.zone = zone;
+    }
+
+    public TriggerMode getMode() {
+        return mode;
+    }
+    public void setMode(TriggerMode mode) {
+        this.mode = mode;
     }
 
     public boolean shouldTrigger(Player player) {

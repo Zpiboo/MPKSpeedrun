@@ -14,6 +14,7 @@ import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
 import io.github.zpiboo.mpkspeedrun.Speedrunner;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.Map;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.TriggerZone;
+import io.github.zpiboo.mpkspeedrun.parkourmaps.TriggerZone.TriggerMode;
 import io.github.zpiboo.mpkspeedrun.util.components.RadioButton;
 import io.github.zpiboo.mpkspeedrun.util.components.RadioButtonGroup;
 
@@ -37,16 +38,15 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
         setTitle("Parkour Maps");
 
         addMap = new Button("Add Map", new Vector2D(0, 0), new Vector2D(60, 20), mouseButton -> {
-            if (mouseButton == Mouse.Button.LEFT) {
-                Map newMap = new Map(
-                    Map.getDefaultName(),
-                    new TriggerZone(),
-                    new TriggerZone()
-                );
-                maps.add(newMap);
-                newMap.save();
-                updateList();
-            }
+            if (mouseButton != Mouse.Button.LEFT) return;
+            Map newMap = new Map(
+                Map.getDefaultName(),
+                new TriggerZone(),
+                new TriggerZone()
+            );
+            maps.add(newMap);
+            newMap.save();
+            items.add(new PkMapItem(this, newMap));
         });
         bottomCover.setHeight(24, false);
         bottomCover.backgroundColor = null;
@@ -78,6 +78,8 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
         public Button deleteBtn;
         public List<InputField> startFields = new ArrayList<>();
         public List<InputField> finishFields = new ArrayList<>();
+        public Button startModeBtn;
+        public Button finishModeBtn;
 
         public PkMapItem(ScrollableList<PkMapItem> parent, Map map) {
             super(parent);
@@ -107,8 +109,10 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
             addChild(selectedBtn);
             selectedBtn.setPos(new Vector2D(5, 5));
 
-            BoundingBox3D startZone = map.getStart().getZone();
-            BoundingBox3D finishZone = map.getFinish().getZone();
+            TriggerZone mapStart = map.getStart();
+            TriggerZone mapFinish = map.getFinish();
+            BoundingBox3D startZone = mapStart.getZone();
+            BoundingBox3D finishZone = mapFinish.getZone();
             for (FieldName fieldName : FieldName.values()) {
                 InputField startField = createInputField(startZone, fieldName);
                 startFields.add(startField);
@@ -120,26 +124,50 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
                 setupField(finishField);
                 addChild(finishField);
             }
+            Vector2D modeBtnSize = new Vector2D(
+                5 + startFields.get(0).getDisplayedSize().getX()
+                  + startFields.get(3).getDisplayedSize().getX(),
+                11
+            );
+            startModeBtn = new Button(mapStart.getMode().toString(), Vector2D.ZERO, modeBtnSize, mouseButton -> {
+                if (mouseButton != Mouse.Button.LEFT) return;
+                TriggerMode newStartMode = mapStart.getMode().getNext();
+                mapStart.setMode(newStartMode);
+                startModeBtn.setText(newStartMode.toString());
+            });
+            addChild(startModeBtn);
+            startModeBtn.setPos(new Vector2D(16, 90));
+
+            finishModeBtn = new Button(mapFinish.getMode().toString(), Vector2D.ZERO, modeBtnSize, mouseButton -> {
+                if (mouseButton != Mouse.Button.LEFT) return;
+                TriggerMode newFinishMode = mapFinish.getMode().getNext();
+                mapFinish.setMode(newFinishMode);
+                finishModeBtn.setText(newFinishMode.toString());
+            });
+            addChild(finishModeBtn, PERCENT.NONE, Anchor.TOP_LEFT, Anchor.TOP_CENTER);
+            finishModeBtn.setPos(new Vector2D(0, 90));
 
             collapseBtn = new Button("v", Vector2D.ZERO, new Vector2D(11, 11), mouseButton -> {
-                if (mouseButton == Mouse.Button.LEFT) {
-                    collapsed = !collapsed;
-                }
+                if (mouseButton != Mouse.Button.LEFT) return;
+                collapsed = !collapsed;
+                collapseBtn.setText(collapsed ? "v" : "^");
+                collapseBtn.textOffset = collapsed ? Vector2D.ZERO : new Vector2D(0, 3);
             });
-            addChild(collapseBtn);
+            addChild(collapseBtn, PERCENT.NONE, Anchor.TOP_RIGHT);
+            collapseBtn.setPos(new Vector2D(21, 5));
 
             deleteBtn = new Button("x", Vector2D.ZERO, new Vector2D(11, 11), mouseButton -> {
-                if (mouseButton == Mouse.Button.LEFT) {
-                    maps.remove(map);
-                    try {
-                        Files.deleteIfExists(map.getFilePath());
-                    } catch (IOException e) {
-                        MPKSpeedrun.LOGGER.error("Failed to delete map file: " + map.getFilePath() + " - " + e.getMessage(), e);
-                    }
-                    updateList();
+                if (mouseButton != Mouse.Button.LEFT) return;
+                maps.remove(map);
+                try {
+                    Files.deleteIfExists(map.getFilePath());
+                } catch (IOException e) {
+                    MPKSpeedrun.LOGGER.error("Failed to delete map file: " + map.getFilePath() + " - " + e.getMessage(), e);
                 }
+                items.remove(this);
             });
-            addChild(deleteBtn);
+            addChild(deleteBtn, PERCENT.NONE, Anchor.TOP_RIGHT);
+            deleteBtn.setPos(new Vector2D(5, 5));
         }
 
         @Override public int getHeight() { return collapsed ? 21 : 106; }
@@ -157,21 +185,21 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
                     false
                 );
 
-
-            collapseBtn.setText(collapsed ? "v" : "^");
-            collapseBtn.textOffset = collapsed ? Vector2D.ZERO : new Vector2D(0, 3);
-            collapseBtn.setPos(new Vector2D(size.getX() * 14/16, 5).round());
             collapseBtn.render(mouse);
-
-            deleteBtn.setPos(new Vector2D(size.getX()* 15/16, 5).round());
             deleteBtn.render(mouse);
 
             if (collapsed) return;
 
             nameField.render(mouse);
 
+            double halfSize = getDisplayedSize().getX() / 2;
+            FontRenderer.drawString("Start Box:", pos.add(16, 26), Color.WHITE, false);
             renderFields(startFields, new Vector2D(16, 42), mouse);
-            renderFields(finishFields, new Vector2D(getDisplayedSize().getX()/2, 42), mouse);
+            FontRenderer.drawString("Finish Box:", pos.add(halfSize, 26), Color.WHITE, false);
+            renderFields(finishFields, new Vector2D(halfSize, 42), mouse);
+
+            startModeBtn.render(mouse);
+            finishModeBtn.render(mouse);
         }
 
         @Override
@@ -184,6 +212,8 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
                 components.add(nameField);
                 components.addAll(startFields);
                 components.addAll(finishFields);
+                components.add(startModeBtn);
+                components.add(finishModeBtn);
             }
 
             return ItrUtil.orMapAll(
