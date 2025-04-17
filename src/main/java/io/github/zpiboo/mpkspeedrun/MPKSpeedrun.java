@@ -7,6 +7,7 @@ import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.modules.MPKModule;
 import io.github.kurrycat.mpkmod.util.ClassUtil;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.Map;
+import io.github.zpiboo.mpkspeedrun.parkourmaps.gui.PkMapsGUIScreen;
 import io.github.zpiboo.mpkspeedrun.util.FileUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
