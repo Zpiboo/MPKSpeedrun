@@ -5,6 +5,7 @@ import io.github.kurrycat.mpkmod.compatibility.MCClasses.Keyboard;
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.events.OnTickEndEvent;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
+import io.github.kurrycat.mpkmod.util.Vector2D;
 
 import java.util.List;
 
@@ -12,10 +13,11 @@ public class SpeedrunLabels {
     @InfoString.AccessInstance
     public static final SpeedrunLabels instance = new SpeedrunLabels();
 
-    public int groundtime = 0;
-    public int runTicks = 0;
+    private int groundtime = 0;
+    private int runTicks = 0;
 
-    public boolean isMoving = false;
+    private Vector2D inputVector;
+    private boolean isMoving = false;
 
     @InfoString.Getter
     public int getGroundtime() {
@@ -32,14 +34,16 @@ public class SpeedrunLabels {
 
         if (currentPlayer == null || previousPlayer == null) return;
 
+        int inputX = 0, inputY = 0;
         List<Integer> buttons = Keyboard.getPressedButtons();
+        if (buttons.contains(InputConstants.KEY_W)) inputY = 1;
+        if (buttons.contains(InputConstants.KEY_A)) inputX = -1;
+        if (buttons.contains(InputConstants.KEY_S)) inputY -= 1;
+        if (buttons.contains(InputConstants.KEY_D)) inputX += 1;
+        instance.inputVector = new Vector2D(inputX, inputY);
 
         boolean wasMoving = instance.isMoving;
-        instance.isMoving =
-                buttons.contains(InputConstants.KEY_W) ||
-                buttons.contains(InputConstants.KEY_A) ||
-                buttons.contains(InputConstants.KEY_S) ||
-                buttons.contains(InputConstants.KEY_D);
+        instance.isMoving = !instance.inputVector.equals(Vector2D.ZERO);
 
         if (currentPlayer.isOnGround()) {
             instance.groundtime = previousPlayer.isOnGround()
