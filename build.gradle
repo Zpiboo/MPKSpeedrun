@@ -29,6 +29,8 @@ dependencies {
 }
 
 shadowJar {
+    archiveClassifier.set("")
+
     var config = file("$temporaryDir/mpkmodule.config.json")
     var jsonBuilder = new JsonBuilder()
 
