@@ -1,14 +1,11 @@
 package io.github.zpiboo.mpkspeedrun;
 
-import io.github.kurrycat.mpkmod.compatibility.MCClasses.InputConstants;
-import io.github.kurrycat.mpkmod.compatibility.MCClasses.Keyboard;
+import io.github.kurrycat.mpkmod.compatibility.MCClasses.KeyBinding;
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.events.OnTickEndEvent;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.util.Vector2D;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.Map;
-
-import java.util.List;
 
 public class Speedrunner {
     @InfoString.AccessInstance
@@ -81,11 +78,10 @@ public class Speedrunner {
         if (currentPlayer == null || previousPlayer == null) return;
 
         int inputX = 0, inputY = 0;
-        List<Integer> buttons = Keyboard.getPressedButtons();
-        if (buttons.contains(InputConstants.KEY_W)) inputY = 1;
-        if (buttons.contains(InputConstants.KEY_A)) inputX = -1;
-        if (buttons.contains(InputConstants.KEY_S)) inputY -= 1;
-        if (buttons.contains(InputConstants.KEY_D)) inputX += 1;
+        if (KeyBinding.getByName("key.forward").isKeyDown()) inputY = 1;
+        if (KeyBinding.getByName("key.left").isKeyDown()) inputX = -1;
+        if (KeyBinding.getByName("key.back").isKeyDown()) inputY -= 1;
+        if (KeyBinding.getByName("key.right").isKeyDown()) inputX += 1;
         instance.inputVector = new Vector2D(inputX, inputY);
 
         boolean wasMoving = instance.isMoving;
