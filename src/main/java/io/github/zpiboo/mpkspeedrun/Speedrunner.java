@@ -9,9 +9,9 @@ import io.github.kurrycat.mpkmod.util.Vector2D;
 
 import java.util.List;
 
-public class SpeedrunLabels {
+public class Speedrunner {
     @InfoString.AccessInstance
-    public static final SpeedrunLabels instance = new SpeedrunLabels();
+    public static final Speedrunner instance = new Speedrunner();
 
     private int groundtime = 0;
     private int runTicks = 0;
