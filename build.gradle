@@ -2,10 +2,11 @@ import groovy.json.JsonBuilder
 
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.0.0'
 }
 
 group = 'io.github.zpiboo.mpkspeedrun'
-version = '0.1.1'
+version = '0.1.2'
 var mainClassPath = 'io.github.zpiboo.mpkspeedrun.MPKSpeedrun'
 
 tasks.withType(JavaCompile).configureEach {
@@ -20,13 +21,16 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.json:json:20240303'
     compileOnly 'org.apache.logging.log4j:log4j-api:2.24.1'
     compileOnly 'org.apache.logging.log4j:log4j-core:2.24.1'
 
     compileOnly 'com.github.kurrycat2004:MPKMod_2:2.0.0-pre.11'
 }
 
-jar {
+shadowJar {
+    archiveClassifier.set("")
+
     var config = file("$temporaryDir/mpkmodule.config.json")
     var jsonBuilder = new JsonBuilder()
 
@@ -37,4 +41,7 @@ jar {
 
     config.text = jsonBuilder.toPrettyString()
     from config
+
+    mergeServiceFiles()
+    configurations = [project.configurations.runtimeClasspath]
 }
