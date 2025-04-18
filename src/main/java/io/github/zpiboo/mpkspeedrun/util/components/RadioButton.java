@@ -7,7 +7,7 @@ public class RadioButton extends CheckButton {
     private RadioButtonGroup group;
 
     public RadioButton(Vector2D pos, RadioButtonGroup group, boolean checked, CheckButtonCallback callback) {
-        super(Vector2D.ZERO, checked, null);
+        super(pos, checked, null);
 
         this.group = group;
         group.addButton(this);
