@@ -50,10 +50,10 @@ public class TriggerZone {
     }
 
     public boolean shouldTrigger(Player player) {
-        Vector3D currPos = player.getPos();
-        Vector3D lastPos = player.getLastPos();
-        BoundingBox3D currBb = player.getBoundingBox();
-        BoundingBox3D lastBb = player.getLastBoundingBox();
+        final Vector3D currPos = player.getPos();
+        final Vector3D lastPos = player.getLastPos();
+        final BoundingBox3D currBb = player.getBoundingBox();
+        final BoundingBox3D lastBb = player.getLastBoundingBox();
 
         switch (mode) {
             case POS_ENTER:

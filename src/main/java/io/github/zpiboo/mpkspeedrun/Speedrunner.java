@@ -70,8 +70,8 @@ public class Speedrunner {
 
 
     public static void onTickEnd(OnTickEndEvent evt) {
-        Player currentPlayer = Player.getLatest();
-        Player previousPlayer = Player.getBeforeLatest();
+        final Player currentPlayer = Player.getLatest();
+        final Player previousPlayer = Player.getBeforeLatest();
 
         if (currentPlayer == null || previousPlayer == null) return;
 
@@ -81,7 +81,7 @@ public class Speedrunner {
         if (KeyBinding.getByName("key.back").isKeyDown()) inputY -= 1;
         if (KeyBinding.getByName("key.right").isKeyDown()) inputX += 1;
 
-        boolean wasMoving = instance.isMoving;
+        final boolean wasMoving = instance.isMoving;
         instance.isMoving = inputX != 0 || inputY != 0;
 
         if (currentPlayer.isOnGround()) {
@@ -100,19 +100,19 @@ public class Speedrunner {
         }
 
 
-        Map pkMap = instance.getCurrentMap();
+        final Map pkMap = instance.getCurrentMap();
         if (pkMap == null) return;
 
         if (instance.isTimed()) {
             instance.incrementTimer();
 
-            boolean shouldFinishMap = pkMap.getFinish().shouldTrigger(currentPlayer);
+            final boolean shouldFinishMap = pkMap.getFinish().shouldTrigger(currentPlayer);
             if (shouldFinishMap) {
                 instance.setTimed(false);
             }
         }
 
-        boolean shouldStartMap = pkMap.getStart().shouldTrigger(currentPlayer);
+        final boolean shouldStartMap = pkMap.getStart().shouldTrigger(currentPlayer);
         if (shouldStartMap) {
             instance.resetTimer();
             instance.setTimed(true);

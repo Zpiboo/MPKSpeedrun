@@ -101,7 +101,7 @@ public class Map {
         }
 
         try {
-            Map pkMap = fromJson(new JSONObject(
+            final Map pkMap = fromJson(new JSONObject(
                 new String(Files.readAllBytes(filePath), StandardCharsets.UTF_8)
             ));
             pkMap.setName(mapName);

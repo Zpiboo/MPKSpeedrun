@@ -25,7 +25,7 @@ public class MPKSpeedrun implements MPKModule {
             classesField.setAccessible(true);
 
             @SuppressWarnings("unchecked")
-            Set<Class<?>> classes = (Set<Class<?>>) classesField.get(null);
+            final Set<Class<?>> classes = (Set<Class<?>>) classesField.get(null);
 
             classes.add(Speedrunner.class);
             classes.add(Map.class);

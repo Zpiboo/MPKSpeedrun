@@ -4,7 +4,7 @@ import io.github.kurrycat.mpkmod.gui.components.CheckButton;
 import io.github.kurrycat.mpkmod.util.Vector2D;
 
 public class RadioButton extends CheckButton {
-    private RadioButtonGroup group;
+    private final RadioButtonGroup group;
 
     public RadioButton(Vector2D pos, RadioButtonGroup group, boolean checked, CheckButtonCallback callback) {
         super(pos, checked, null);

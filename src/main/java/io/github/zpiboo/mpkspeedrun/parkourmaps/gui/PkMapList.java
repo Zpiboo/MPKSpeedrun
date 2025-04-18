@@ -24,7 +24,7 @@ import java.nio.file.Files;
 
 public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
     public List<Map> maps;
-    private RadioButtonGroup radioGroup;
+    private final RadioButtonGroup radioGroup;
 
     public Button addMap;
 
@@ -69,7 +69,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
     }
 
     public class PkMapItem extends ScrollableListItem<PkMapItem> {
-        private Map map;
+        private final Map map;
         public boolean collapsed = true;
 
         public InputField nameField;
@@ -124,7 +124,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
                 setupField(finishField);
                 addChild(finishField);
             }
-            Vector2D modeBtnSize = new Vector2D(
+            final Vector2D modeBtnSize = new Vector2D(
                 5 + startFields.get(0).getDisplayedSize().getX()
                   + startFields.get(3).getDisplayedSize().getX(),
                 11
@@ -192,7 +192,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
 
             nameField.render(mouse);
 
-            double halfSize = getDisplayedSize().getX() / 2;
+            final double halfSize = getDisplayedSize().getX() / 2;
             FontRenderer.drawString("Start Box:", pos.add(16, 26), Color.WHITE, false);
             renderFields(startFields, new Vector2D(16, 42), mouse);
             FontRenderer.drawString("Finish Box:", pos.add(halfSize, 26), Color.WHITE, false);
@@ -204,7 +204,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
 
         @Override
         public boolean handleMouseInput(Mouse.State state, Vector2D mousePos, Mouse.Button button) {
-            ArrayList<Component> components = new ArrayList<>();
+            final ArrayList<Component> components = new ArrayList<>();
             components.add(selectedBtn);
             components.add(collapseBtn);
             components.add(deleteBtn);
@@ -275,7 +275,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
         MIN_X("minX"), MIN_Y("minY"), MIN_Z("minZ"),
         MAX_X("maxX"), MAX_Y("maxY"), MAX_Z("maxZ");
 
-        private String strName;
+        private final String strName;
         private FieldName(String strName) {
             this.strName = strName;
         }
