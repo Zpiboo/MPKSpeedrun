@@ -34,8 +34,8 @@ public class Speedrunner {
 
     @InfoString.Getter
     public String getTimer() {
-        final int seconds = this.timer / 20;
-        final int milliseconds = (this.timer % 20)*50;
+        final int seconds = getTimeInTicks() / 20;
+        final int milliseconds = (getTimeInTicks() % 20)*50;
 
         String zeroes = "";
         if (milliseconds == 0) zeroes = "00";
