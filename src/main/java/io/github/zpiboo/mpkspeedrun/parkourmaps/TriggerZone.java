@@ -93,7 +93,7 @@ public class TriggerZone {
             mode = TriggerMode.valueOf(modeString);
         } catch (IllegalArgumentException e) {
             mode = TriggerMode.POS_ENTER;
-            MPKSpeedrun.LOGGER.warn("Trigger mode not found: " + modeString);
+            MPKSpeedrun.LOGGER.warn("Trigger mode not found: {}", modeString);
         }
 
         double minX = zoneJson.optDouble("minx", 0);

@@ -93,7 +93,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
                         try {
                             Files.move(map.getFilePath(), Map.getFilePath(newName));
                         } catch (IOException e) {
-                            MPKSpeedrun.LOGGER.error("Failed to rename map file to " + newName + ": " + map.getFilePath() + " - " + e.getMessage(), e);
+                            MPKSpeedrun.LOGGER.error("Failed to rename map file to {}: {} - {}", newName, map.getFilePath(), e.getMessage(), e);
                         }
                         map.setName(newName);
                     }
@@ -162,7 +162,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
                 try {
                     Files.deleteIfExists(map.getFilePath());
                 } catch (IOException e) {
-                    MPKSpeedrun.LOGGER.error("Failed to delete map file: " + map.getFilePath() + " - " + e.getMessage(), e);
+                    MPKSpeedrun.LOGGER.error("Failed to delete map file: {} - {}", map.getFilePath(), e.getMessage(), e);
                 }
                 items.remove(this);
             });
