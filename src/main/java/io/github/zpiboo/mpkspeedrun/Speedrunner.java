@@ -4,7 +4,6 @@ import io.github.kurrycat.mpkmod.compatibility.MCClasses.KeyBinding;
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.events.OnTickEndEvent;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
-import io.github.kurrycat.mpkmod.util.Vector2D;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.Map;
 
 public class Speedrunner {
@@ -14,7 +13,6 @@ public class Speedrunner {
     private int groundtime = 0;
     private int runTicks = 0;
 
-    private Vector2D inputVector;
     private boolean isMoving = false;
 
     private static Map currentMap = null;
@@ -82,10 +80,9 @@ public class Speedrunner {
         if (KeyBinding.getByName("key.left").isKeyDown()) inputX = -1;
         if (KeyBinding.getByName("key.back").isKeyDown()) inputY -= 1;
         if (KeyBinding.getByName("key.right").isKeyDown()) inputX += 1;
-        instance.inputVector = new Vector2D(inputX, inputY);
 
         boolean wasMoving = instance.isMoving;
-        instance.isMoving = !instance.inputVector.equals(Vector2D.ZERO);
+        instance.isMoving = inputX != 0 || inputY != 0;
 
         if (currentPlayer.isOnGround()) {
             instance.groundtime = previousPlayer.isOnGround()
