@@ -239,8 +239,8 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
             for (int i = 0; i < fields.size(); i++) {
                 InputField field = fields.get(i);
                 field.setPos(offset.add(
-                    xOffset*(i / 3),
-                    16*(i % 3)
+                    xOffset * (double) (i / 3),
+                    16 * (i % 3)
                 ));
                 field.render(mouse);
             }
