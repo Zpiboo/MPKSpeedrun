@@ -23,10 +23,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
-    public List<Map> maps;
+    public final List<Map> maps;
     private final RadioButtonGroup radioGroup;
 
-    public Button addMap;
+    public final Button addMap;
 
     public PkMapList(Vector2D pos, Vector2D size, List<Map> maps) {
         this.maps = maps;
@@ -72,12 +72,12 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
         private final Map map;
         public boolean collapsed = true;
 
-        public InputField nameField;
-        public RadioButton selectedBtn;
+        public final InputField nameField;
+        public final RadioButton selectedBtn;
         public Button collapseBtn;
-        public Button deleteBtn;
-        public List<InputField> startFields = new ArrayList<>();
-        public List<InputField> finishFields = new ArrayList<>();
+        public final Button deleteBtn;
+        public final List<InputField> startFields = new ArrayList<>();
+        public final List<InputField> finishFields = new ArrayList<>();
         public Button startModeBtn;
         public Button finishModeBtn;
 
