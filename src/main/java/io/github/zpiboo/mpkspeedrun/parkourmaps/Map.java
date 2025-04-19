@@ -62,11 +62,9 @@ public class Map {
     }
 
     public JSONObject toJson() {
-        JSONObject mapJson = new JSONObject()
-            .put("start", start != null ? start.toJson() : new JSONObject())
-            .put("finish", finish != null ? finish.toJson() : new JSONObject());
-
-        return mapJson;
+        return new JSONObject()
+                .put("start", start != null ? start.toJson() : new JSONObject())
+                .put("finish", finish != null ? finish.toJson() : new JSONObject());
     }
     public static Map fromJson(JSONObject mapJson) {
         String name = getDefaultName();

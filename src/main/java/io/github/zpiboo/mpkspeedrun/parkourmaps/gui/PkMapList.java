@@ -224,7 +224,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
 
         private InputField createInputField(BoundingBox3D zone, FieldName fieldName) {
             return new InputField(getFieldValue(zone, fieldName), Vector2D.ZERO, 0, true)
-                .setName(fieldName.toString() + ": ")
+                .setName(fieldName + ": ")
                 .setOnContentChange(c -> {
                     if (c.getNumber() != null) setFieldValue(zone, fieldName, c.getNumber());
                 });
@@ -276,7 +276,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
         MAX_X("maxX"), MAX_Y("maxY"), MAX_Z("maxZ");
 
         private final String strName;
-        private FieldName(String strName) {
+        FieldName(String strName) {
             this.strName = strName;
         }
         @Override

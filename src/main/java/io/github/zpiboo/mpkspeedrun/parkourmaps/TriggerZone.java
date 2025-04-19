@@ -14,7 +14,7 @@ public class TriggerZone {
     private BoundingBox3D zone;
     private TriggerMode mode;
 
-    public static TriggerZone ZERO = new TriggerZone();
+    public static final TriggerZone ZERO = new TriggerZone();
 
     public enum TriggerMode {
         POS_ENTER,
@@ -73,18 +73,16 @@ public class TriggerZone {
     }
 
     public JSONObject toJson() {
-        JSONObject zoneJson = new JSONObject()
-            .put("mode", mode.toString())
+        return new JSONObject()
+                .put("mode", mode.toString())
 
-            .put("minx", zone.minX())
-            .put("miny", zone.minY())
-            .put("minz", zone.minZ())
+                .put("minx", zone.minX())
+                .put("miny", zone.minY())
+                .put("minz", zone.minZ())
 
-            .put("maxx", zone.maxX())
-            .put("maxy", zone.maxY())
-            .put("maxz", zone.maxZ());
-
-        return zoneJson;
+                .put("maxx", zone.maxX())
+                .put("maxy", zone.maxY())
+                .put("maxz", zone.maxZ());
     }
     public static TriggerZone fromJson(JSONObject zoneJson) {
         String modeString = zoneJson.optString("mode", "POS_ENTER");
