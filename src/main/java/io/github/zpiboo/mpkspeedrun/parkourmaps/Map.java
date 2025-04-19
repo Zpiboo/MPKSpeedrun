@@ -62,11 +62,9 @@ public class Map {
     }
 
     public JSONObject toJson() {
-        JSONObject mapJson = new JSONObject()
-            .put("start", start != null ? start.toJson() : new JSONObject())
-            .put("finish", finish != null ? finish.toJson() : new JSONObject());
-
-        return mapJson;
+        return new JSONObject()
+                .put("start", start != null ? start.toJson() : new JSONObject())
+                .put("finish", finish != null ? finish.toJson() : new JSONObject());
     }
     public static Map fromJson(JSONObject mapJson) {
         String name = getDefaultName();
@@ -89,28 +87,28 @@ public class Map {
         try {
             Files.write(filePath, toJson().toString(2).getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
-            MPKSpeedrun.LOGGER.error("Failed to create file: " + filePath + " - " + e.getMessage(), e);
+            MPKSpeedrun.LOGGER.error("Failed to create file: {} - {}", filePath, e.getMessage(), e);
         }
     }
     public static Map load(String mapName) {
         Path filePath = getFilePath(mapName);
 
         if (!Files.exists(filePath)) {
-            MPKSpeedrun.LOGGER.warn("Couldn't find map file: " + filePath);
+            MPKSpeedrun.LOGGER.warn("Couldn't find map file: {}", filePath);
             return null;
         }
 
         try {
-            Map pkMap = fromJson(new JSONObject(
+            final Map pkMap = fromJson(new JSONObject(
                 new String(Files.readAllBytes(filePath), StandardCharsets.UTF_8)
             ));
             pkMap.setName(mapName);
 
             return pkMap;
         } catch (IOException e) {
-            MPKSpeedrun.LOGGER.error("Failed to read map file: " + filePath + " - " + e.getMessage(), e);
+            MPKSpeedrun.LOGGER.error("Failed to read map file: {} - {}", filePath, e.getMessage(), e);
         } catch (Exception e) {
-            MPKSpeedrun.LOGGER.error("Invalid JSON format in map file: " + filePath + " - " + e.getMessage(), e);
+            MPKSpeedrun.LOGGER.error("Invalid JSON format in map file: {} - {}", filePath, e.getMessage(), e);
         }
 
         return null;

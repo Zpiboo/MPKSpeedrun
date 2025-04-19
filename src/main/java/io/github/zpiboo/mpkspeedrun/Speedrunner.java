@@ -4,7 +4,6 @@ import io.github.kurrycat.mpkmod.compatibility.MCClasses.KeyBinding;
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.events.OnTickEndEvent;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
-import io.github.kurrycat.mpkmod.util.Vector2D;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.Map;
 
 public class Speedrunner {
@@ -14,7 +13,6 @@ public class Speedrunner {
     private int groundtime = 0;
     private int runTicks = 0;
 
-    private Vector2D inputVector;
     private boolean isMoving = false;
 
     private static Map currentMap = null;
@@ -34,8 +32,8 @@ public class Speedrunner {
 
     @InfoString.Getter
     public String getTimer() {
-        final int seconds = this.timer / 20;
-        final int milliseconds = (this.timer % 20)*50;
+        final int seconds = getTimeInTicks() / 20;
+        final int milliseconds = (getTimeInTicks() % 20)*50;
 
         String zeroes = "";
         if (milliseconds == 0) zeroes = "00";
@@ -72,8 +70,8 @@ public class Speedrunner {
 
 
     public static void onTickEnd(OnTickEndEvent evt) {
-        Player currentPlayer = Player.getLatest();
-        Player previousPlayer = Player.getBeforeLatest();
+        final Player currentPlayer = Player.getLatest();
+        final Player previousPlayer = Player.getBeforeLatest();
 
         if (currentPlayer == null || previousPlayer == null) return;
 
@@ -82,10 +80,9 @@ public class Speedrunner {
         if (KeyBinding.getByName("key.left").isKeyDown()) inputX = -1;
         if (KeyBinding.getByName("key.back").isKeyDown()) inputY -= 1;
         if (KeyBinding.getByName("key.right").isKeyDown()) inputX += 1;
-        instance.inputVector = new Vector2D(inputX, inputY);
 
-        boolean wasMoving = instance.isMoving;
-        instance.isMoving = !instance.inputVector.equals(Vector2D.ZERO);
+        final boolean wasMoving = instance.isMoving;
+        instance.isMoving = inputX != 0 || inputY != 0;
 
         if (currentPlayer.isOnGround()) {
             instance.groundtime = previousPlayer.isOnGround()
@@ -103,19 +100,19 @@ public class Speedrunner {
         }
 
 
-        Map pkMap = instance.getCurrentMap();
+        final Map pkMap = instance.getCurrentMap();
         if (pkMap == null) return;
 
         if (instance.isTimed()) {
             instance.incrementTimer();
 
-            boolean shouldFinishMap = pkMap.getFinish().shouldTrigger(currentPlayer);
+            final boolean shouldFinishMap = pkMap.getFinish().shouldTrigger(currentPlayer);
             if (shouldFinishMap) {
                 instance.setTimed(false);
             }
         }
 
-        boolean shouldStartMap = pkMap.getStart().shouldTrigger(currentPlayer);
+        final boolean shouldStartMap = pkMap.getStart().shouldTrigger(currentPlayer);
         if (shouldStartMap) {
             instance.resetTimer();
             instance.setTimed(true);

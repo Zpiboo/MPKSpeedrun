@@ -14,7 +14,7 @@ public class TriggerZone {
     private BoundingBox3D zone;
     private TriggerMode mode;
 
-    public static TriggerZone ZERO = new TriggerZone();
+    public static final TriggerZone ZERO = new TriggerZone();
 
     public enum TriggerMode {
         POS_ENTER,
@@ -50,10 +50,10 @@ public class TriggerZone {
     }
 
     public boolean shouldTrigger(Player player) {
-        Vector3D currPos = player.getPos();
-        Vector3D lastPos = player.getLastPos();
-        BoundingBox3D currBb = player.getBoundingBox();
-        BoundingBox3D lastBb = player.getLastBoundingBox();
+        final Vector3D currPos = player.getPos();
+        final Vector3D lastPos = player.getLastPos();
+        final BoundingBox3D currBb = player.getBoundingBox();
+        final BoundingBox3D lastBb = player.getLastBoundingBox();
 
         switch (mode) {
             case POS_ENTER:
@@ -73,18 +73,16 @@ public class TriggerZone {
     }
 
     public JSONObject toJson() {
-        JSONObject zoneJson = new JSONObject()
-            .put("mode", mode.toString())
+        return new JSONObject()
+                .put("mode", mode.toString())
 
-            .put("minx", zone.minX())
-            .put("miny", zone.minY())
-            .put("minz", zone.minZ())
+                .put("minx", zone.minX())
+                .put("miny", zone.minY())
+                .put("minz", zone.minZ())
 
-            .put("maxx", zone.maxX())
-            .put("maxy", zone.maxY())
-            .put("maxz", zone.maxZ());
-
-        return zoneJson;
+                .put("maxx", zone.maxX())
+                .put("maxy", zone.maxY())
+                .put("maxz", zone.maxZ());
     }
     public static TriggerZone fromJson(JSONObject zoneJson) {
         String modeString = zoneJson.optString("mode", "POS_ENTER");
@@ -93,7 +91,7 @@ public class TriggerZone {
             mode = TriggerMode.valueOf(modeString);
         } catch (IllegalArgumentException e) {
             mode = TriggerMode.POS_ENTER;
-            MPKSpeedrun.LOGGER.warn("Trigger mode not found: " + modeString);
+            MPKSpeedrun.LOGGER.warn("Trigger mode not found: {}", modeString);
         }
 
         double minX = zoneJson.optDouble("minx", 0);
