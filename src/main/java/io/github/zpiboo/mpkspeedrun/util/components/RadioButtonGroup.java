@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RadioButtonGroup {
-    private List<RadioButton> buttons = new ArrayList<>();
+    private final List<RadioButton> buttons = new ArrayList<>();
     private RadioButton selected;
 
     public List<RadioButton> getButtons() {

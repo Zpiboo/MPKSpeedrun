@@ -4,10 +4,10 @@ import io.github.kurrycat.mpkmod.gui.components.CheckButton;
 import io.github.kurrycat.mpkmod.util.Vector2D;
 
 public class RadioButton extends CheckButton {
-    private RadioButtonGroup group;
+    private final RadioButtonGroup group;
 
     public RadioButton(Vector2D pos, RadioButtonGroup group, boolean checked, CheckButtonCallback callback) {
-        super(Vector2D.ZERO, checked, null);
+        super(pos, checked, null);
 
         this.group = group;
         group.addButton(this);
@@ -19,9 +19,6 @@ public class RadioButton extends CheckButton {
                 getGroup().unselectButton();
             callback.apply(isChecked);
         };
-    }
-    public RadioButton(Vector2D pos, RadioButtonGroup group) {
-        this(pos, group, false, isChecked -> {});
     }
 
     public RadioButtonGroup getGroup() {

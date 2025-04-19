@@ -2,11 +2,11 @@ import groovy.json.JsonBuilder
 
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '8.0.0'
+    id 'com.gradleup.shadow' version '8.3.6'
 }
 
 group = 'io.github.zpiboo.mpkspeedrun'
-version = '1.0-SNAPSHOT'
+version = '0.1.3'
 var mainClassPath = 'io.github.zpiboo.mpkspeedrun.MPKSpeedrun'
 
 tasks.withType(JavaCompile).configureEach {
@@ -29,13 +29,15 @@ dependencies {
 }
 
 shadowJar {
+    archiveClassifier.set("")
+
     var config = file("$temporaryDir/mpkmodule.config.json")
     var jsonBuilder = new JsonBuilder()
 
-    jsonBuilder {
-        moduleName "mpkspeedrun"
-        mainClass mainClassPath
-    }
+    jsonBuilder (
+        moduleName: "mpkspeedrun",
+        mainClass: mainClassPath
+    )
 
     config.text = jsonBuilder.toPrettyString()
     from config

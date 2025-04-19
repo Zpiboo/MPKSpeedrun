@@ -23,10 +23,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
-    public List<Map> maps;
-    private RadioButtonGroup radioGroup;
+    public final List<Map> maps;
+    private final RadioButtonGroup radioGroup;
 
-    public Button addMap;
+    public final Button addMap;
 
     public PkMapList(Vector2D pos, Vector2D size, List<Map> maps) {
         this.maps = maps;
@@ -69,15 +69,15 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
     }
 
     public class PkMapItem extends ScrollableListItem<PkMapItem> {
-        private Map map;
+        private final Map map;
         public boolean collapsed = true;
 
-        public InputField nameField;
-        public RadioButton selectedBtn;
+        public final InputField nameField;
+        public final RadioButton selectedBtn;
         public Button collapseBtn;
-        public Button deleteBtn;
-        public List<InputField> startFields = new ArrayList<>();
-        public List<InputField> finishFields = new ArrayList<>();
+        public final Button deleteBtn;
+        public final List<InputField> startFields = new ArrayList<>();
+        public final List<InputField> finishFields = new ArrayList<>();
         public Button startModeBtn;
         public Button finishModeBtn;
 
@@ -93,7 +93,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
                         try {
                             Files.move(map.getFilePath(), Map.getFilePath(newName));
                         } catch (IOException e) {
-                            MPKSpeedrun.LOGGER.error("Failed to rename map file to " + newName + ": " + map.getFilePath() + " - " + e.getMessage(), e);
+                            MPKSpeedrun.LOGGER.error("Failed to rename map file to {}: {} - {}", newName, map.getFilePath(), e.getMessage(), e);
                         }
                         map.setName(newName);
                     }
@@ -124,7 +124,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
                 setupField(finishField);
                 addChild(finishField);
             }
-            Vector2D modeBtnSize = new Vector2D(
+            final Vector2D modeBtnSize = new Vector2D(
                 5 + startFields.get(0).getDisplayedSize().getX()
                   + startFields.get(3).getDisplayedSize().getX(),
                 11
@@ -162,7 +162,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
                 try {
                     Files.deleteIfExists(map.getFilePath());
                 } catch (IOException e) {
-                    MPKSpeedrun.LOGGER.error("Failed to delete map file: " + map.getFilePath() + " - " + e.getMessage(), e);
+                    MPKSpeedrun.LOGGER.error("Failed to delete map file: {} - {}", map.getFilePath(), e.getMessage(), e);
                 }
                 items.remove(this);
             });
@@ -192,7 +192,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
 
             nameField.render(mouse);
 
-            double halfSize = getDisplayedSize().getX() / 2;
+            final double halfSize = getDisplayedSize().getX() / 2;
             FontRenderer.drawString("Start Box:", pos.add(16, 26), Color.WHITE, false);
             renderFields(startFields, new Vector2D(16, 42), mouse);
             FontRenderer.drawString("Finish Box:", pos.add(halfSize, 26), Color.WHITE, false);
@@ -204,7 +204,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
 
         @Override
         public boolean handleMouseInput(Mouse.State state, Vector2D mousePos, Mouse.Button button) {
-            ArrayList<Component> components = new ArrayList<>();
+            final ArrayList<Component> components = new ArrayList<>();
             components.add(selectedBtn);
             components.add(collapseBtn);
             components.add(deleteBtn);
@@ -224,7 +224,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
 
         private InputField createInputField(BoundingBox3D zone, FieldName fieldName) {
             return new InputField(getFieldValue(zone, fieldName), Vector2D.ZERO, 0, true)
-                .setName(fieldName.toString() + ": ")
+                .setName(fieldName + ": ")
                 .setOnContentChange(c -> {
                     if (c.getNumber() != null) setFieldValue(zone, fieldName, c.getNumber());
                 });
@@ -239,8 +239,8 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
             for (int i = 0; i < fields.size(); i++) {
                 InputField field = fields.get(i);
                 field.setPos(offset.add(
-                    xOffset*(i / 3),
-                    16*(i % 3)
+                    xOffset * (double) (i / 3),
+                    16 * (i % 3)
                 ));
                 field.render(mouse);
             }
@@ -275,8 +275,8 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
         MIN_X("minX"), MIN_Y("minY"), MIN_Z("minZ"),
         MAX_X("maxX"), MAX_Y("maxY"), MAX_Z("maxZ");
 
-        private String strName;
-        private FieldName(String strName) {
+        private final String strName;
+        FieldName(String strName) {
             this.strName = strName;
         }
         @Override

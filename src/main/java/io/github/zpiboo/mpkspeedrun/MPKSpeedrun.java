@@ -9,12 +9,11 @@ import io.github.kurrycat.mpkmod.util.ClassUtil;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.Map;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.gui.PkMapsGUIScreen;
 import io.github.zpiboo.mpkspeedrun.util.FileUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Field;
 import java.util.Set;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class MPKSpeedrun implements MPKModule {
     public static final String MODULE_NAME = "mpkspeedrun";
@@ -26,7 +25,7 @@ public class MPKSpeedrun implements MPKModule {
             classesField.setAccessible(true);
 
             @SuppressWarnings("unchecked")
-            Set<Class<?>> classes = (Set<Class<?>>) classesField.get(null);
+            final Set<Class<?>> classes = (Set<Class<?>>) classesField.get(null);
 
             classes.add(Speedrunner.class);
             classes.add(Map.class);
