@@ -20,9 +20,6 @@ public class RadioButton extends CheckButton {
             callback.apply(isChecked);
         };
     }
-    public RadioButton(Vector2D pos, RadioButtonGroup group) {
-        this(pos, group, false, isChecked -> {});
-    }
 
     public RadioButtonGroup getGroup() {
         return group;
