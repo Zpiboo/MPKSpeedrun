@@ -69,7 +69,7 @@ public class Speedrunner {
     }
 
 
-    public static void onTickEnd(OnTickEndEvent evt) {
+    public static void onTickEnd(@SuppressWarnings("unused") OnTickEndEvent evt) {
         final Player currentPlayer = Player.getLatest();
         final Player previousPlayer = Player.getBeforeLatest();
 

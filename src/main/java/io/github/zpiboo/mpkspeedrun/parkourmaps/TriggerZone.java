@@ -14,7 +14,7 @@ public class TriggerZone {
     private BoundingBox3D zone;
     private TriggerMode mode;
 
-    public static final TriggerZone ZERO = new TriggerZone();
+    @SuppressWarnings("unused") public static final TriggerZone ZERO = new TriggerZone();
 
     public enum TriggerMode {
         POS_ENTER,
@@ -38,6 +38,7 @@ public class TriggerZone {
     public BoundingBox3D getZone() {
         return zone;
     }
+    @SuppressWarnings("unused")
     public void setZone(BoundingBox3D zone) {
         this.zone = zone;
     }
