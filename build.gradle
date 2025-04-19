@@ -34,10 +34,10 @@ shadowJar {
     var config = file("$temporaryDir/mpkmodule.config.json")
     var jsonBuilder = new JsonBuilder()
 
-    jsonBuilder {
-        moduleName "mpkspeedrun"
-        mainClass mainClassPath
-    }
+    jsonBuilder (
+        moduleName: "mpkspeedrun",
+        mainClass: mainClassPath
+    )
 
     config.text = jsonBuilder.toPrettyString()
     from config
