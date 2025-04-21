@@ -4,7 +4,7 @@ import io.github.kurrycat.mpkmod.compatibility.MCClasses.KeyBinding;
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.events.OnTickEndEvent;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
-import io.github.zpiboo.mpkspeedrun.parkourmaps.Map;
+import io.github.zpiboo.mpkspeedrun.parkourmaps.PkMap;
 
 public class Speedrunner {
     @InfoString.AccessInstance
@@ -15,7 +15,7 @@ public class Speedrunner {
 
     private boolean isMoving = false;
 
-    private static Map currentMap = null;
+    private static PkMap currentMap = null;
     private boolean isTimed = false;
     private int timer = 0;
 
@@ -44,10 +44,10 @@ public class Speedrunner {
 
 
     @InfoString.Getter
-    public Map getCurrentMap() {
+    public PkMap getCurrentMap() {
         return currentMap;
     }
-    public void setCurrentMap(Map map) {
+    public void setCurrentMap(PkMap map) {
         currentMap = map;
     }
 
@@ -100,7 +100,7 @@ public class Speedrunner {
         }
 
 
-        final Map pkMap = instance.getCurrentMap();
+        final PkMap pkMap = instance.getCurrentMap();
         if (pkMap == null) return;
 
         if (instance.isTimed()) {

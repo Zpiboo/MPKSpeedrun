@@ -8,11 +8,11 @@ import io.github.kurrycat.mpkmod.gui.ComponentScreen;
 import io.github.kurrycat.mpkmod.gui.components.Anchor;
 import io.github.kurrycat.mpkmod.gui.components.Button;
 import io.github.kurrycat.mpkmod.util.*;
-import io.github.zpiboo.mpkspeedrun.parkourmaps.Map;
+import io.github.zpiboo.mpkspeedrun.parkourmaps.PkMap;
 import io.github.zpiboo.mpkspeedrun.util.FileUtil;
 
 public class PkMapsGUIScreen extends ComponentScreen {
-    private List<Map> maps = new ArrayList<>();
+    private List<PkMap> maps = new ArrayList<>();
     private PkMapList mapList;
 
     @Override public boolean resetOnOpen() { return false; }
@@ -43,7 +43,7 @@ public class PkMapsGUIScreen extends ComponentScreen {
     public void onGuiClosed() {
         super.onGuiClosed();
 
-        for (Map pkMap : mapList.maps)
+        for (PkMap pkMap : mapList.maps)
             pkMap.save();
     }
 
@@ -52,7 +52,7 @@ public class PkMapsGUIScreen extends ComponentScreen {
 
         File[] files = FileUtil.MAP_FOLDER.listFiles((dir, filename) -> filename.endsWith(".json"));
         for (File mapFile : files) {
-            Map pkMap = Map.load(mapFile.getName().substring(0, mapFile.getName().length() - 5));
+            PkMap pkMap = PkMap.load(mapFile.getName().substring(0, mapFile.getName().length() - 5));
             if (pkMap != null) maps.add(pkMap);
         }
     }

@@ -15,13 +15,13 @@ import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
 import io.github.zpiboo.mpkspeedrun.util.FileUtil;
 
 @InfoString.DataClass
-public class Map {
+public class PkMap {
     private String name;
 
     private TriggerZone start;
     private TriggerZone finish;
 
-    public Map(String name, TriggerZone start, TriggerZone finish) {
+    public PkMap(String name, TriggerZone start, TriggerZone finish) {
         setName(name);
         setStart(start);
         setFinish(finish);
@@ -66,13 +66,13 @@ public class Map {
                 .put("start", start != null ? start.toJson() : new JSONObject())
                 .put("finish", finish != null ? finish.toJson() : new JSONObject());
     }
-    public static Map fromJson(JSONObject mapJson) {
+    public static PkMap fromJson(JSONObject mapJson) {
         String name = getDefaultName();
 
         TriggerZone start = TriggerZone.fromJson( mapJson.optJSONObject("start") );
         TriggerZone finish = TriggerZone.fromJson( mapJson.optJSONObject("finish") );
 
-        return new Map(name, start, finish);
+        return new PkMap(name, start, finish);
     }
 
     public Path getFilePath() {
@@ -90,7 +90,7 @@ public class Map {
             MPKSpeedrun.LOGGER.error("Failed to create file: {} - {}", filePath, e.getMessage(), e);
         }
     }
-    public static Map load(String mapName) {
+    public static PkMap load(String mapName) {
         Path filePath = getFilePath(mapName);
 
         if (!Files.exists(filePath)) {
@@ -99,7 +99,7 @@ public class Map {
         }
 
         try {
-            final Map pkMap = fromJson(new JSONObject(
+            final PkMap pkMap = fromJson(new JSONObject(
                 new String(Files.readAllBytes(filePath), StandardCharsets.UTF_8)
             ));
             pkMap.setName(mapName);

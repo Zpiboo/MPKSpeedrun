@@ -12,7 +12,7 @@ import io.github.kurrycat.mpkmod.gui.interfaces.MouseInputListener;
 import io.github.kurrycat.mpkmod.util.*;
 import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
 import io.github.zpiboo.mpkspeedrun.Speedrunner;
-import io.github.zpiboo.mpkspeedrun.parkourmaps.Map;
+import io.github.zpiboo.mpkspeedrun.parkourmaps.PkMap;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.TriggerZone;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.TriggerZone.TriggerMode;
 import io.github.zpiboo.mpkspeedrun.util.components.RadioButton;
@@ -23,12 +23,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
-    public final List<Map> maps;
+    public final List<PkMap> maps;
     private final RadioButtonGroup radioGroup;
 
     public final Button addMap;
 
-    public PkMapList(Vector2D pos, Vector2D size, List<Map> maps) {
+    public PkMapList(Vector2D pos, Vector2D size, List<PkMap> maps) {
         this.maps = maps;
 
         radioGroup = new RadioButtonGroup();
@@ -39,8 +39,8 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
 
         addMap = new Button("Add Map", new Vector2D(0, 0), new Vector2D(60, 20), mouseButton -> {
             if (mouseButton != Mouse.Button.LEFT) return;
-            Map newMap = new Map(
-                Map.getDefaultName(),
+            PkMap newMap = new PkMap(
+                PkMap.getDefaultName(),
                 new TriggerZone(),
                 new TriggerZone()
             );
@@ -57,7 +57,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
 
     public void updateList() {
         items.clear();
-        for (Map map : maps) {
+        for (PkMap map : maps) {
             items.add(new PkMapItem(this, map));
         }
     }
@@ -69,7 +69,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
     }
 
     public class PkMapItem extends ScrollableListItem<PkMapItem> {
-        private final Map map;
+        private final PkMap map;
         public boolean collapsed = true;
 
         public final InputField nameField;
@@ -81,7 +81,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
         public Button startModeBtn;
         public Button finishModeBtn;
 
-        public PkMapItem(ScrollableList<PkMapItem> parent, Map map) {
+        public PkMapItem(ScrollableList<PkMapItem> parent, PkMap map) {
             super(parent);
             this.map = map;
 
@@ -89,9 +89,9 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
                 .setName("Name: ")
                 .setOnContentChange(c -> {
                     String newName = c.getContent();
-                    if (!Files.exists(Map.getFilePath(newName))) {
+                    if (!Files.exists(PkMap.getFilePath(newName))) {
                         try {
-                            Files.move(map.getFilePath(), Map.getFilePath(newName));
+                            Files.move(map.getFilePath(), PkMap.getFilePath(newName));
                         } catch (IOException e) {
                             MPKSpeedrun.LOGGER.error("Failed to rename map file to {}: {} - {}", newName, map.getFilePath(), e.getMessage(), e);
                         }
