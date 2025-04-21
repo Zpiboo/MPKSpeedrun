@@ -7,7 +7,6 @@ public class RadioButtonGroup {
     private final List<RadioButton> buttons = new ArrayList<>();
     private RadioButton selected;
 
-    @SuppressWarnings("unused")
     public List<RadioButton> getButtons() {
         return buttons;
     }
@@ -15,7 +14,6 @@ public class RadioButtonGroup {
         buttons.add(button);
     }
 
-    @SuppressWarnings("unused")
     public RadioButton getSelected() {
         return selected;
     }
