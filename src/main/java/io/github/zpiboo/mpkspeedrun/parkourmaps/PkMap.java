@@ -21,6 +21,8 @@ public class PkMap {
     private TriggerZone start;
     private TriggerZone finish;
 
+    private int startTime = 1;
+
     public PkMap(String name, TriggerZone start, TriggerZone finish) {
         setName(name);
         setStart(start);
@@ -64,15 +66,19 @@ public class PkMap {
     public JSONObject toJson() {
         return new JSONObject()
                 .put("start", start != null ? start.toJson() : new JSONObject())
-                .put("finish", finish != null ? finish.toJson() : new JSONObject());
+                .put("finish", finish != null ? finish.toJson() : new JSONObject())
+                .put("start_time", startTime);
     }
     public static PkMap fromJson(JSONObject mapJson) {
         String name = getDefaultName();
 
         TriggerZone start = TriggerZone.fromJson( mapJson.optJSONObject("start") );
         TriggerZone finish = TriggerZone.fromJson( mapJson.optJSONObject("finish") );
+        int startTime = mapJson.optInt("start_time", 1);
 
-        return new PkMap(name, start, finish);
+        final PkMap loadedMap = new PkMap(name, start, finish);
+        loadedMap.setStartTime(startTime);
+        return loadedMap;
     }
 
     public Path getFilePath() {
@@ -112,5 +118,12 @@ public class PkMap {
         }
 
         return null;
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
     }
 }

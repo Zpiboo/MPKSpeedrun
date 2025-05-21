@@ -65,7 +65,7 @@ public class Speedrunner {
         timer++;
     }
     private void resetTimer() {
-        timer = 0;
+        timer = getCurrentMap().getStartTime();
     }
 
 
@@ -104,12 +104,11 @@ public class Speedrunner {
         if (pkMap == null) return;
 
         if (instance.isTimed()) {
-            instance.incrementTimer();
-
             final boolean shouldFinishMap = pkMap.getFinish().shouldTrigger(currentPlayer);
-            if (shouldFinishMap) {
+            if (shouldFinishMap)
                 instance.setTimed(false);
-            }
+            else
+                instance.incrementTimer();
         }
 
         final boolean shouldStartMap = pkMap.getStart().shouldTrigger(currentPlayer);
