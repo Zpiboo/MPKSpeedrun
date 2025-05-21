@@ -1,15 +1,15 @@
 package io.github.zpiboo.mpkspeedrun.parkourmaps.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.FontRenderer;
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Renderer2D;
 import io.github.kurrycat.mpkmod.gui.components.*;
 import io.github.kurrycat.mpkmod.gui.components.Button;
 import io.github.kurrycat.mpkmod.gui.components.Component;
 import io.github.kurrycat.mpkmod.gui.interfaces.MouseInputListener;
-import io.github.kurrycat.mpkmod.util.*;
+import io.github.kurrycat.mpkmod.util.BoundingBox3D;
+import io.github.kurrycat.mpkmod.util.ItrUtil;
+import io.github.kurrycat.mpkmod.util.Mouse;
+import io.github.kurrycat.mpkmod.util.Vector2D;
 import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
 import io.github.zpiboo.mpkspeedrun.Speedrunner;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.PkMap;
@@ -21,14 +21,17 @@ import io.github.zpiboo.mpkspeedrun.util.components.RadioButtonGroup;
 import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
-    public final List<PkMap> maps;
+    public final Set<PkMap> maps;
     private final RadioButtonGroup radioGroup;
 
     public final Button addMap;
 
-    public PkMapList(Vector2D pos, Vector2D size, List<PkMap> maps) {
+    public PkMapList(Vector2D pos, Vector2D size, Set<PkMap> maps) {
         this.maps = maps;
 
         radioGroup = new RadioButtonGroup();

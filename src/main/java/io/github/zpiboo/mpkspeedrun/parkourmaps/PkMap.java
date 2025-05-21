@@ -1,5 +1,11 @@
 package io.github.zpiboo.mpkspeedrun.parkourmaps;
 
+import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
+import io.github.kurrycat.mpkmod.util.BoundingBox3D;
+import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
+import io.github.zpiboo.mpkspeedrun.util.FileUtil;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -7,15 +13,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.json.JSONObject;
-
-import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
-import io.github.kurrycat.mpkmod.util.BoundingBox3D;
-import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
-import io.github.zpiboo.mpkspeedrun.util.FileUtil;
-
 @InfoString.DataClass
-public class PkMap {
+public class PkMap implements Comparable<PkMap> {
     private String name;
 
     private TriggerZone start;
@@ -125,5 +124,10 @@ public class PkMap {
     }
     public void setStartTime(int startTime) {
         this.startTime = startTime;
+    }
+
+    @Override
+    public int compareTo(PkMap other) {
+        return this.getName().compareTo( other.getName() );
     }
 }
