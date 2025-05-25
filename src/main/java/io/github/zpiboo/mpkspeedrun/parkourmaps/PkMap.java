@@ -1,5 +1,11 @@
 package io.github.zpiboo.mpkspeedrun.parkourmaps;
 
+import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
+import io.github.kurrycat.mpkmod.util.BoundingBox3D;
+import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
+import io.github.zpiboo.mpkspeedrun.util.FileUtil;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -7,21 +13,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.json.JSONObject;
-
-import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
-import io.github.kurrycat.mpkmod.util.BoundingBox3D;
-import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
-import io.github.zpiboo.mpkspeedrun.util.FileUtil;
-
 @InfoString.DataClass
-public class Map {
+public class PkMap implements Comparable<PkMap> {
     private String name;
 
     private TriggerZone start;
     private TriggerZone finish;
 
-    public Map(String name, TriggerZone start, TriggerZone finish) {
+    private int startTime = 1;
+
+    public PkMap(String name, TriggerZone start, TriggerZone finish) {
         setName(name);
         setStart(start);
         setFinish(finish);
@@ -64,15 +65,19 @@ public class Map {
     public JSONObject toJson() {
         return new JSONObject()
                 .put("start", start != null ? start.toJson() : new JSONObject())
-                .put("finish", finish != null ? finish.toJson() : new JSONObject());
+                .put("finish", finish != null ? finish.toJson() : new JSONObject())
+                .put("start_time", startTime);
     }
-    public static Map fromJson(JSONObject mapJson) {
+    public static PkMap fromJson(JSONObject mapJson) {
         String name = getDefaultName();
 
         TriggerZone start = TriggerZone.fromJson( mapJson.optJSONObject("start") );
         TriggerZone finish = TriggerZone.fromJson( mapJson.optJSONObject("finish") );
+        int startTime = mapJson.optInt("start_time", 1);
 
-        return new Map(name, start, finish);
+        final PkMap loadedMap = new PkMap(name, start, finish);
+        loadedMap.setStartTime(startTime);
+        return loadedMap;
     }
 
     public Path getFilePath() {
@@ -90,7 +95,7 @@ public class Map {
             MPKSpeedrun.LOGGER.error("Failed to create file: {} - {}", filePath, e.getMessage(), e);
         }
     }
-    public static Map load(String mapName) {
+    public static PkMap load(String mapName) {
         Path filePath = getFilePath(mapName);
 
         if (!Files.exists(filePath)) {
@@ -99,7 +104,7 @@ public class Map {
         }
 
         try {
-            final Map pkMap = fromJson(new JSONObject(
+            final PkMap pkMap = fromJson(new JSONObject(
                 new String(Files.readAllBytes(filePath), StandardCharsets.UTF_8)
             ));
             pkMap.setName(mapName);
@@ -112,5 +117,17 @@ public class Map {
         }
 
         return null;
+    }
+
+    public int getStartTime() {
+        return startTime;
+    }
+    public void setStartTime(int startTime) {
+        this.startTime = startTime;
+    }
+
+    @Override
+    public int compareTo(PkMap other) {
+        return this.getName().compareTo( other.getName() );
     }
 }

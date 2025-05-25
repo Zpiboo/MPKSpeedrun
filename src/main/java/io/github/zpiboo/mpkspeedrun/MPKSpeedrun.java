@@ -6,7 +6,7 @@ import io.github.kurrycat.mpkmod.events.EventAPI;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.modules.MPKModule;
 import io.github.kurrycat.mpkmod.util.ClassUtil;
-import io.github.zpiboo.mpkspeedrun.parkourmaps.Map;
+import io.github.zpiboo.mpkspeedrun.parkourmaps.PkMap;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.gui.PkMapsGUIScreen;
 import io.github.zpiboo.mpkspeedrun.util.FileUtil;
 import org.apache.logging.log4j.LogManager;
@@ -28,7 +28,7 @@ public class MPKSpeedrun implements MPKModule {
             final Set<Class<?>> classes = (Set<Class<?>>) classesField.get(null);
 
             classes.add(Speedrunner.class);
-            classes.add(Map.class);
+            classes.add(PkMap.class);
 
             Main.infoTree = InfoString.createInfoTree();
         } catch (ReflectiveOperationException e) { e.printStackTrace(); }
