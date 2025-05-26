@@ -49,8 +49,8 @@ public class Speedrunner {
     }
     public void setCurrentMap(PkMap map) {
         currentMap = map;
-        resetTimer();
-        if (map == null) setTimed(false);
+        timer = 0;
+        setTimed(false);
     }
 
     private boolean isTimed() {

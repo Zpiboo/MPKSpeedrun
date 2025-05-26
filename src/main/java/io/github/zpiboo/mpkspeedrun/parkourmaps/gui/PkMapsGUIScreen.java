@@ -12,10 +12,10 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class PkMapsGUIScreen extends ComponentScreen {
-    private Set<PkMap> maps = new TreeSet<>();
+    private final Set<PkMap> maps = new TreeSet<>();
     private PkMapList mapList;
 
-    @Override public boolean resetOnOpen() { return true; }
+    @Override public boolean resetOnOpen() { return false; }
     @Override public boolean shouldCreateKeyBind() { return true; }
 
     @Override
@@ -45,10 +45,11 @@ public class PkMapsGUIScreen extends ComponentScreen {
 
         for (PkMap pkMap : mapList.maps)
             pkMap.save();
+        mapList.updateList();
     }
 
     public void loadMaps() {
-        maps = new TreeSet<>();
+        maps.clear();
 
         File[] files = FileUtil.MAP_FOLDER.listFiles((dir, filename) -> filename.endsWith(".json"));
         if (files == null) return;

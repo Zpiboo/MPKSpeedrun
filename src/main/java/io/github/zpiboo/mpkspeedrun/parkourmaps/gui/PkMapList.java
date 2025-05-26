@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
@@ -103,7 +104,11 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
                 });
             addChild(nameField);
 
-            selectedBtn = new RadioButton(Vector2D.ZERO, radioGroup, false, checked -> {
+            final PkMap currentMap = Speedrunner.instance.getCurrentMap();
+            boolean isCurrentMap = currentMap != null && Objects.equals(currentMap.getName(), map.getName());
+            if (isCurrentMap)
+                Speedrunner.instance.setCurrentMap(map);
+            selectedBtn = new RadioButton(Vector2D.ZERO, radioGroup, isCurrentMap, checked -> {
                 if (checked)
                     Speedrunner.instance.setCurrentMap(map);
                 else
