@@ -19,6 +19,9 @@ public class Speedrunner {
     private boolean isTimed = false;
     private int timer = 0;
 
+    private int startAirtime;
+    private int finishAirtime;
+
 
     @InfoString.Getter
     public int getGroundtime() {
@@ -48,9 +51,8 @@ public class Speedrunner {
         return currentMap;
     }
     public void setCurrentMap(PkMap map) {
+        resetMapInfoVars();
         currentMap = map;
-        timer = 0;
-        setTimed(false);
     }
 
     private boolean isTimed() {
@@ -58,6 +60,16 @@ public class Speedrunner {
     }
     private void setTimed(boolean isTimed) {
         this.isTimed = isTimed;
+    }
+    private void startTimer() {
+        resetTimer();
+        setTimed(true);
+    }
+    private void stopTimer() {
+        setTimed(false);
+//        if (getCurrentMap().getUsesSubticks()) {
+//            //
+//        }
     }
 
     public int getTimeInTicks() {
@@ -68,6 +80,29 @@ public class Speedrunner {
     }
     private void resetTimer() {
         timer = getCurrentMap().getStartTime();
+    }
+
+    @InfoString.Getter
+    public int getStartAirtime() {
+        return startAirtime;
+    }
+    private void setStartAirtime(int startAirtime) {
+        this.startAirtime = startAirtime;
+    }
+    @InfoString.Getter
+    public int getFinishAirtime() {
+        return finishAirtime;
+    }
+    private void setFinishAirtime(int finishAirtime) {
+        this.finishAirtime = finishAirtime;
+    }
+
+
+    private void resetMapInfoVars() {
+        timer = 0;
+        setTimed(false);
+        setStartAirtime(0);
+        setFinishAirtime(0);
     }
 
 
@@ -107,16 +142,19 @@ public class Speedrunner {
 
         if (instance.isTimed()) {
             final boolean shouldFinishMap = pkMap.getFinish().shouldTrigger(currentPlayer);
-            if (shouldFinishMap)
-                instance.setTimed(false);
-            else
+            if (shouldFinishMap) {
+                instance.stopTimer();
+                instance.setFinishAirtime(currentPlayer.getAirtime());
+            } else
                 instance.incrementTimer();
         }
 
         final boolean shouldStartMap = pkMap.getStart().shouldTrigger(currentPlayer);
         if (shouldStartMap) {
-            instance.resetTimer();
-            instance.setTimed(true);
+            instance.startTimer();
+
+            instance.setStartAirtime(currentPlayer.getAirtime());
+            instance.setFinishAirtime(0);
         }
     }
 }

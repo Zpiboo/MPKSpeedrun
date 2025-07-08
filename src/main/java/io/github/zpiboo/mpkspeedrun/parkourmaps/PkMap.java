@@ -21,6 +21,7 @@ public class PkMap implements Comparable<PkMap> {
     private TriggerZone finish;
 
     private int startTime = 1;
+    private boolean usesSubticks = false;
 
     public PkMap(String name, TriggerZone start, TriggerZone finish) {
         setName(name);
@@ -66,7 +67,8 @@ public class PkMap implements Comparable<PkMap> {
         return new JSONObject()
                 .put("start", start != null ? start.toJson() : new JSONObject())
                 .put("finish", finish != null ? finish.toJson() : new JSONObject())
-                .put("start_time", startTime);
+                .put("start_time", startTime)
+                .put("uses_subticks", usesSubticks);
     }
     public static PkMap fromJson(JSONObject mapJson) {
         String name = getDefaultName();
@@ -74,9 +76,11 @@ public class PkMap implements Comparable<PkMap> {
         TriggerZone start = TriggerZone.fromJson( mapJson.optJSONObject("start") );
         TriggerZone finish = TriggerZone.fromJson( mapJson.optJSONObject("finish") );
         int startTime = mapJson.optInt("start_time", 1);
+        boolean usesSubticks = mapJson.optBoolean("uses_subticks", false);
 
         final PkMap loadedMap = new PkMap(name, start, finish);
         loadedMap.setStartTime(startTime);
+        loadedMap.setUsesSubticks(usesSubticks);
         return loadedMap;
     }
 
@@ -124,6 +128,13 @@ public class PkMap implements Comparable<PkMap> {
     }
     public void setStartTime(int startTime) {
         this.startTime = startTime;
+    }
+
+    public boolean getUsesSubticks() {
+        return usesSubticks;
+    }
+    public void setUsesSubticks(boolean usesSubticks) {
+        this.usesSubticks = usesSubticks;
     }
 
     @Override
