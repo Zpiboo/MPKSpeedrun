@@ -80,6 +80,6 @@ public class BB3D {
         }
 
         double entryT = Math.max(tMin, 0.0);
-        return (float) entryT;
+        return entryT;
     }
 }

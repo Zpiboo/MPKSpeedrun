@@ -5,6 +5,7 @@ import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.events.OnTickEndEvent;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.PkMap;
+import io.github.zpiboo.mpkspeedrun.util.BB3D;
 
 public class Speedrunner {
     @InfoString.AccessInstance
@@ -18,6 +19,7 @@ public class Speedrunner {
     private static PkMap currentMap = null;
     private boolean isTimed = false;
     private int timer = 0;
+    private double subtick = 0.0F;
 
     private int startAirtime;
     private int finishAirtime;
@@ -35,12 +37,13 @@ public class Speedrunner {
 
     @InfoString.Getter
     public String getTimer() {
-        final int seconds = getTimeInTicks() / 20;
-        final int milliseconds = (getTimeInTicks() % 20)*50;
+        int seconds = getTimeInTicks() / 20;
+        int milliseconds = (getTimeInTicks() % 20)*50;
+        if (getCurrentMap().getUsesSubticks()) milliseconds += subtick*50;
 
         String zeroes = "";
-        if (milliseconds == 0) zeroes = "00";
-        else if (milliseconds == 50) zeroes = "0";
+        if (milliseconds < 10) zeroes = "00";
+        else if (milliseconds < 100) zeroes = "0";
 
         return seconds + "." + zeroes + milliseconds + "s";
     }
@@ -67,9 +70,14 @@ public class Speedrunner {
     }
     private void stopTimer() {
         setTimed(false);
-//        if (getCurrentMap().getUsesSubticks()) {
-//            //
-//        }
+        if (getCurrentMap().getUsesSubticks()) {
+            final Player player = Player.getLatest();
+            subtick = BB3D.slabMethod(
+                    player.getPos(),
+                    player.getLastPos(),
+                    getCurrentMap().getFinish().getZone()
+            );
+        }
     }
 
     public int getTimeInTicks() {
