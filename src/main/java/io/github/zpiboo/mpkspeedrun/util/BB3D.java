@@ -2,7 +2,6 @@ package io.github.zpiboo.mpkspeedrun.util;
 
 import io.github.kurrycat.mpkmod.util.BoundingBox3D;
 import io.github.kurrycat.mpkmod.util.Vector3D;
-import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
 
 public class BB3D {
     public static boolean contains(BoundingBox3D bb, Vector3D vec) {
@@ -80,7 +79,6 @@ public class BB3D {
             return 1.0F;
         }
 
-        double entryT = Math.max(tMin, 0.0);
-        return entryT;
+        return Math.max(tMin, 0.0);
     }
 }
