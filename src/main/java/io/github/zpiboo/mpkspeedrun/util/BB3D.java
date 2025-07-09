@@ -2,6 +2,7 @@ package io.github.zpiboo.mpkspeedrun.util;
 
 import io.github.kurrycat.mpkmod.util.BoundingBox3D;
 import io.github.kurrycat.mpkmod.util.Vector3D;
+import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
 
 public class BB3D {
     public static boolean contains(BoundingBox3D bb, Vector3D vec) {
@@ -42,7 +43,7 @@ public class BB3D {
         boxMax[1] = box.maxY();
         boxMax[2] = box.maxZ();
 
-        for(int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             direction[i] = endArr[i] - startArr[i];
         }
 

@@ -19,7 +19,8 @@ public class Speedrunner {
     private static PkMap currentMap = null;
     private boolean isTimed = false;
     private int timer = 0;
-    private double subtick = 0.0F;
+    @InfoString.Field
+    public double subtick = 0.0D;
 
     private int startAirtime;
     private int finishAirtime;
@@ -38,8 +39,15 @@ public class Speedrunner {
     @InfoString.Getter
     public String getTimer() {
         int seconds = getTimeInTicks() / 20;
-        int milliseconds = (getTimeInTicks() % 20)*50;
-        if (getCurrentMap().getUsesSubticks()) milliseconds += subtick*50;
+        int milliseconds = (getTimeInTicks() % 20) * 50;
+
+        if (getCurrentMap() != null && getCurrentMap().getUsesSubticks()) {
+            milliseconds += (int) (subtick * 50);
+            if (milliseconds >= 1000) {  // Just in case idk
+                seconds += 1;
+                milliseconds -= 1000;
+            }
+        }
 
         String zeroes = "";
         if (milliseconds < 10) zeroes = "00";
@@ -55,6 +63,7 @@ public class Speedrunner {
     }
     public void setCurrentMap(PkMap map) {
         resetMapInfoVars();
+        timer = 0;
         currentMap = map;
     }
 
@@ -65,16 +74,16 @@ public class Speedrunner {
         this.isTimed = isTimed;
     }
     private void startTimer() {
-        resetTimer();
+        resetMapInfoVars();
         setTimed(true);
     }
     private void stopTimer() {
         setTimed(false);
-        if (getCurrentMap().getUsesSubticks()) {
+        if (getCurrentMap() != null && getCurrentMap().getUsesSubticks()) {
             final Player player = Player.getLatest();
             subtick = BB3D.slabMethod(
-                    player.getPos(),
                     player.getLastPos(),
+                    player.getPos(),
                     getCurrentMap().getFinish().getZone()
             );
         }
@@ -88,6 +97,7 @@ public class Speedrunner {
     }
     private void resetTimer() {
         timer = getCurrentMap().getStartTime();
+        subtick = 0.0D;
     }
 
     @InfoString.Getter
@@ -107,7 +117,7 @@ public class Speedrunner {
 
 
     private void resetMapInfoVars() {
-        timer = 0;
+        resetTimer();
         setTimed(false);
         setStartAirtime(0);
         setFinishAirtime(0);
@@ -160,9 +170,7 @@ public class Speedrunner {
         final boolean shouldStartMap = pkMap.getStart().shouldTrigger(currentPlayer);
         if (shouldStartMap) {
             instance.startTimer();
-
             instance.setStartAirtime(currentPlayer.getAirtime());
-            instance.setFinishAirtime(0);
         }
     }
 }

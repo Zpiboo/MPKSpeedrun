@@ -130,6 +130,7 @@ public class PkMap implements Comparable<PkMap> {
         this.startTime = startTime;
     }
 
+    @InfoString.Getter
     public boolean getUsesSubticks() {
         return usesSubticks;
     }
