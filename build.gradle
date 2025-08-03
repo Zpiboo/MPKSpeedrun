@@ -18,6 +18,7 @@ tasks.withType(JavaCompile).configureEach {
 repositories {
     mavenCentral()
     maven { url 'https://jitpack.io' }
+    maven { url 'https://maven.fabricmc.net/' }
 }
 
 dependencies {
@@ -28,14 +29,18 @@ dependencies {
     compileOnly 'com.github.kurrycat2004:MPKMod_2:2.0.0-pre.11'
 }
 
-shadowJar {
-    archiveClassifier.set("")
+configurations {
+    shaded { extendsFrom implementation }
+}
 
-    var config = file("$temporaryDir/mpkmodule.config.json")
+shadowJar {
+    archiveClassifier.set('shaded')
+
+    var config = file('$temporaryDir/mpkmodule.config.json')
     var jsonBuilder = new JsonBuilder()
 
     jsonBuilder (
-        moduleName: "mpkspeedrun",
+        moduleName: 'mpkspeedrun',
         mainClass: mainClassPath
     )
 
@@ -43,5 +48,12 @@ shadowJar {
     from config
 
     mergeServiceFiles()
-    configurations = [project.configurations.runtimeClasspath]
+    configurations = [project.configurations.shaded]
+}
+
+remapJar {
+    dependsOn shadowJar
+
+    archiveClassifier.set('remapped')
+    inputFile.set shadowJar.archiveFile
 }
