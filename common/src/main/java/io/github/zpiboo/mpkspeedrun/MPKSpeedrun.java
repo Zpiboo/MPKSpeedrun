@@ -2,6 +2,7 @@ package io.github.zpiboo.mpkspeedrun;
 
 import io.github.kurrycat.mpkmod.Main;
 import io.github.kurrycat.mpkmod.compatibility.API;
+import io.github.kurrycat.mpkmod.compatibility.MCClasses.Minecraft;
 import io.github.kurrycat.mpkmod.events.EventAPI;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.modules.MPKModule;
@@ -9,6 +10,7 @@ import io.github.kurrycat.mpkmod.util.ClassUtil;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.PkMap;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.gui.PkMapsGUIScreen;
 import io.github.zpiboo.mpkspeedrun.util.FileUtil;
+import io.github.zpiboo.mpkspeedrun.util.Proxy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,6 +30,7 @@ public class MPKSpeedrun implements MPKModule {
     }
 
     public void loaded() {
+        Proxy.init(Minecraft.getMcVersion());
         EventAPI.addListener(EventAPI.EventListener.onTickEnd(Speedrunner::onTickEnd));
     }
 
