@@ -9,7 +9,7 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "develop" ]
+    branches: [ 'develop' ]
 
 jobs:
   build:
@@ -20,17 +20,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up JDK 8
+    - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
-        java-version: '8'
-        distribution: 'temurin'
+        java-version: '21'
+        distribution: 'oracle'
 
     - name: Setup Gradle
-      uses: gradle/actions/setup-gradle@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
+      uses: gradle/actions/setup-gradle@v4
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew jar
+      run: ./gradlew buildAll
 
     - name: Set current date as env variable
       run: echo "NOW=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_ENV
@@ -38,5 +38,5 @@ jobs:
     - name: Upload jars artifact
       uses: actions/upload-artifact@v4
       with:
-        name: MPKSpeedrun.${{ env.NOW }}
-        path: build/libs/*.jar
+        name: mpkspeedrun.${{ env.NOW }}
+        path: build/libs/mpkspeedrun-*.jar
