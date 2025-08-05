@@ -1,47 +1,67 @@
-import groovy.json.JsonBuilder
-
-plugins {
-    id 'java'
-    id 'com.gradleup.shadow' version '8.3.6'
-}
-
 group = 'io.github.zpiboo.mpkspeedrun'
 version = '0.1.4'
-var mainClassPath = 'io.github.zpiboo.mpkspeedrun.MPKSpeedrun'
 
-tasks.withType(JavaCompile).configureEach {
-    sourceCompatibility = '1.8'
-    targetCompatibility = '1.8'
-    options.encoding = 'UTF-8'
+tasks.register('buildAll', Jar) {
+    description = 'Builds and merges all modules.'
+    group = 'build'
+
+    archiveBaseName.set('mpkspeedrun')
+    archiveVersion.set(version.toString())
+
+    subprojects.collect() {
+        def jarTask = it.tasks.named(it.ext.has('jarTaskName') ? it.ext.get('jarTaskName') : 'jar')
+        dependsOn jarTask
+
+        from zipTree(jarTask.get().archiveFile)
+    }
+
+    destinationDirectory.set(layout.buildDirectory.dir('libs'))
 }
 
-repositories {
-    mavenCentral()
-    maven { url 'https://jitpack.io' }
-}
+subprojects { Project p ->
+    apply plugin: 'java'
 
-dependencies {
-    implementation 'org.json:json:20240303'
-    compileOnly 'org.apache.logging.log4j:log4j-api:2.24.1'
-    compileOnly 'org.apache.logging.log4j:log4j-core:2.24.1'
+    tasks.withType(JavaCompile).configureEach {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+        options.encoding = 'UTF-8'
+    }
 
-    compileOnly 'com.github.kurrycat2004:MPKMod_2:2.0.0-pre.11'
-}
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
 
-shadowJar {
-    archiveClassifier.set("")
+    dependencies {
+        compileOnly 'com.github.kurrycat2004:MPKMod_2:2.0.0-pre.11'
 
-    var config = file("$temporaryDir/mpkmodule.config.json")
-    var jsonBuilder = new JsonBuilder()
+        if (p.name.startsWith('forge') || p.name.startsWith('fabric')) {
+            implementation project(':common-api')
+            implementation project(':common')
+        }
+    }
 
-    jsonBuilder (
-        moduleName: "mpkspeedrun",
-        mainClass: mainClassPath
-    )
+    p.afterEvaluate {
+        if (p.name.startsWith('fabric')) {
+            p.ext.jarTaskName = 'remapJar'
 
-    config.text = jsonBuilder.toPrettyString()
-    from config
+            p.tasks.named(p.ext.jarTaskName) {
+                dependsOn p.jar
 
-    mergeServiceFiles()
-    configurations = [project.configurations.runtimeClasspath]
+                archiveClassifier.set('remapped')
+                destinationDirectory.set(layout.buildDirectory.dir('remappedJar'))
+
+                inputFile.set(p.jar.archiveFile)
+            }
+        } else if (p.name.startsWith('forge')) {
+            p.ext.jarTaskName = 'remapForgeJar'
+
+            p.tasks.named(p.ext.jarTaskName) {
+                dependsOn p.tasks.named('forgeJar')
+
+                archiveClassifier.set('remapped')
+                destinationDirectory.set(layout.buildDirectory.dir('remappedJar'))
+            }
+        }
+    }
 }

@@ -1,0 +1,36 @@
+plugins {
+    id 'xyz.wagyourtail.unimined' version '1.4.1'
+}
+
+unimined.useGlobalCache = false
+
+sourceSets {
+    forge {
+        compileClasspath += sourceSets.main.output
+        runtimeClasspath += sourceSets.main.output
+    }
+}
+
+unimined.minecraft {
+    version project.minecraft_version  // '1.8.9'
+
+    mappings {
+        mcp("stable", "22-1.8.9")
+        searge()
+
+        calamus()
+    }
+
+    defaultRemapJar = true
+}
+
+unimined.minecraft(sourceSets.forge) {
+    combineWith(sourceSets.main)
+
+    minecraftForge {
+        loader project.forge_version  // '11.15.1.2318-1.8.9'
+        mixinConfig ''
+    }
+
+    defaultRemapJar = true
+}
