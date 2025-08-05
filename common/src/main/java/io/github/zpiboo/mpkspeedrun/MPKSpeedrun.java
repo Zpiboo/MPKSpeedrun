@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Set;
 
 public class MPKSpeedrun implements MPKModule {
@@ -20,19 +21,7 @@ public class MPKSpeedrun implements MPKModule {
     public static final Logger LOGGER = LogManager.getLogger(MODULE_NAME);
 
     public void init() {
-        try {
-            Field classesField = ClassUtil.class.getDeclaredField("classes");
-            classesField.setAccessible(true);
-
-            @SuppressWarnings("unchecked")
-            final Set<Class<?>> classes = (Set<Class<?>>) classesField.get(null);
-
-            classes.add(Speedrunner.class);
-            classes.add(PkMap.class);
-
-            Main.infoTree = InfoString.createInfoTree();
-        } catch (ReflectiveOperationException e) { e.printStackTrace(); }
-
+        addClassesToClassesTxt(new Class[] { Speedrunner.class, PkMap.class });
         FileUtil.init();
 
         API.registerGUIScreen("maps_gui", new PkMapsGUIScreen());
@@ -40,5 +29,18 @@ public class MPKSpeedrun implements MPKModule {
 
     public void loaded() {
         EventAPI.addListener(EventAPI.EventListener.onTickEnd(Speedrunner::onTickEnd));
+    }
+
+    public void addClassesToClassesTxt(Class<?>[] classes) {
+        try {
+            Field classesField = ClassUtil.class.getDeclaredField("classes");
+            classesField.setAccessible(true);
+
+            @SuppressWarnings("unchecked")
+            final Set<Class<?>> classesTxt = (Set<Class<?>>) classesField.get(null);
+            classesTxt.addAll(Arrays.asList(classes));
+
+            Main.infoTree = InfoString.createInfoTree();
+        } catch (ReflectiveOperationException e) { e.printStackTrace(); }
     }
 }

@@ -5,6 +5,7 @@ import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.events.OnTickEndEvent;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.PkMap;
+import io.github.zpiboo.mpkspeedrun.util.Proxy;
 
 public class Speedrunner {
     @InfoString.AccessInstance
