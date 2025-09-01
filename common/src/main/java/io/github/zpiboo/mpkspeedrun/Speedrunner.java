@@ -5,7 +5,6 @@ import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.events.OnTickEndEvent;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.PkMap;
-import io.github.zpiboo.mpkspeedrun.util.Proxy;
 
 public class Speedrunner {
     @InfoString.AccessInstance
@@ -107,14 +106,14 @@ public class Speedrunner {
         if (pkMap == null) return;
 
         if (instance.isTimed()) {
-            final boolean shouldFinishMap = pkMap.getFinish().shouldTrigger(currentPlayer);
+            boolean shouldFinishMap = pkMap.getFinish().tick(currentPlayer);
             if (shouldFinishMap)
                 instance.setTimed(false);
             else
                 instance.incrementTimer();
         }
 
-        final boolean shouldStartMap = pkMap.getStart().shouldTrigger(currentPlayer);
+        boolean shouldStartMap = pkMap.getStart().tick(currentPlayer);
         if (shouldStartMap) {
             instance.resetTimer();
             instance.setTimed(true);

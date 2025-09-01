@@ -8,6 +8,7 @@ import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.modules.MPKModule;
 import io.github.kurrycat.mpkmod.util.ClassUtil;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.PkMap;
+import io.github.zpiboo.mpkspeedrun.parkourmaps.TriggerZone;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.gui.PkMapsGUIScreen;
 import io.github.zpiboo.mpkspeedrun.util.FileUtil;
 import io.github.zpiboo.mpkspeedrun.util.Proxy;
@@ -23,7 +24,7 @@ public class MPKSpeedrun implements MPKModule {
     public static final Logger LOGGER = LogManager.getLogger(MODULE_NAME);
 
     public void init() {
-        addClassesToClassesTxt(new Class[] { Speedrunner.class, PkMap.class });
+        addClassesToClassesTxt(new Class[] { Speedrunner.class, PkMap.class, TriggerZone.class });
         FileUtil.init();
 
         API.registerGUIScreen("maps_gui", new PkMapsGUIScreen());
