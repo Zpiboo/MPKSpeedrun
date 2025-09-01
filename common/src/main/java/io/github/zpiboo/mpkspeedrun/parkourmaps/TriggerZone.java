@@ -16,6 +16,8 @@ public class TriggerZone {
     private BoundingBox3D box;
     private TriggerMode mode;
 
+    private int triggerAirtime = 0;
+
     @SuppressWarnings("unused") public static final TriggerZone ZERO = new TriggerZone();
 
     public enum TriggerMode {
@@ -54,7 +56,15 @@ public class TriggerZone {
         this.mode = mode;
     }
 
-    public boolean shouldTrigger(Player player) {
+    @InfoString.Getter
+    public int getAirtime() {
+        return triggerAirtime;
+    }
+    public void setAirtime(int triggerAirtime) {
+        this.triggerAirtime = triggerAirtime;
+    }
+
+    private boolean shouldTrigger(Player player) {
         final Vector3D currPos = player.getPos();
         final Vector3D lastPos = player.getLastPos();
         final BoundingBox3D currBb = player.getBoundingBox();
@@ -75,6 +85,16 @@ public class TriggerZone {
 
             default: return false;
         }
+    }
+
+    public boolean tick(Player player) {
+        boolean shouldTrigger = shouldTrigger(player);
+
+        if (shouldTrigger) {
+            setAirtime(player.getAirtime());
+        }
+
+        return shouldTrigger;
     }
 
     public JSONObject toJson() {
