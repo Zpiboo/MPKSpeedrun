@@ -32,7 +32,7 @@ public class MPKSpeedrun implements MPKModule {
 
     public void loaded() {
         Proxy.init(Minecraft.getMcVersion());
-        EventAPI.addListener(EventAPI.EventListener.onTickEnd(Speedrunner::onTickEnd));
+        EventAPI.addListener(EventAPI.EventListener.onTickEnd(Speedrunner.instance::onTickEnd));
     }
 
     public void addClassesToClassesTxt(Class<?>[] classes) {

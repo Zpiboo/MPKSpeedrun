@@ -4,6 +4,8 @@ import io.github.kurrycat.mpkmod.compatibility.MCClasses.KeyBinding;
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.events.OnTickEndEvent;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
+import io.github.kurrycat.mpkmod.util.FormatDecimals;
+import io.github.kurrycat.mpkmod.util.MathUtil;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.PkMap;
 
 public class Speedrunner {
@@ -15,9 +17,8 @@ public class Speedrunner {
 
     private boolean isMoving = false;
 
-    private static PkMap currentMap = null;
-    private boolean isTimed = false;
-    private int timer = 0;
+    private PkMap currentMap = null;
+    private final Timer timer = new Timer();
 
 
     @InfoString.Getter
@@ -31,15 +32,8 @@ public class Speedrunner {
     }
 
     @InfoString.Getter
-    public String getTimer() {
-        final int seconds = getTimeInTicks() / 20;
-        final int milliseconds = (getTimeInTicks() % 20)*50;
-
-        String zeroes = "";
-        if (milliseconds == 0) zeroes = "00";
-        else if (milliseconds == 50) zeroes = "0";
-
-        return seconds + "." + zeroes + milliseconds + "s";
+    public Timer getTimer() {
+        return timer;
     }
 
 
@@ -49,29 +43,12 @@ public class Speedrunner {
     }
     public void setCurrentMap(PkMap map) {
         currentMap = map;
-        timer = 0;
-        setTimed(false);
-    }
-
-    private boolean isTimed() {
-        return isTimed;
-    }
-    private void setTimed(boolean isTimed) {
-        this.isTimed = isTimed;
-    }
-
-    public int getTimeInTicks() {
-        return timer;
-    }
-    private void incrementTimer() {
-        timer++;
-    }
-    private void resetTimer() {
-        timer = getCurrentMap().getStartTime();
+        timer.setTimeInTicks(0);
+        timer.setEnabled(false);
     }
 
 
-    public static void onTickEnd(@SuppressWarnings("unused") OnTickEndEvent evt) {
+    public void onTickEnd(@SuppressWarnings("unused") OnTickEndEvent evt) {
         final Player currentPlayer = Player.getLatest();
         final Player previousPlayer = Player.getBeforeLatest();
 
@@ -83,40 +60,73 @@ public class Speedrunner {
         if (KeyBinding.getByName("key.back").isKeyDown()) inputY -= 1;
         if (KeyBinding.getByName("key.right").isKeyDown()) inputX += 1;
 
-        final boolean wasMoving = instance.isMoving;
-        instance.isMoving = inputX != 0 || inputY != 0;
+        final boolean wasMoving = isMoving;
+        isMoving = inputX != 0 || inputY != 0;
 
         if (currentPlayer.isOnGround()) {
-            instance.groundtime = previousPlayer.isOnGround()
-                    ? instance.groundtime + 1
+            groundtime = previousPlayer.isOnGround()
+                    ? groundtime + 1
                     : 0;
 
-            if (instance.isMoving)
+            if (isMoving)
                 if (previousPlayer.isOnGround())
                     if (wasMoving)
-                        instance.runTicks += 1;
+                        runTicks += 1;
                     else
-                        instance.runTicks = 1;
+                        runTicks = 1;
                 else
-                    instance.runTicks = 0;
+                    runTicks = 0;
         }
 
 
-        final PkMap pkMap = instance.getCurrentMap();
+        final PkMap pkMap = getCurrentMap();
         if (pkMap == null) return;
 
-        if (instance.isTimed()) {
+        if (timer.isEnabled()) {
             boolean shouldFinishMap = pkMap.getFinish().tick(currentPlayer);
             if (shouldFinishMap)
-                instance.setTimed(false);
+                timer.setEnabled(false);
             else
-                instance.incrementTimer();
+                timer.increment();
         }
 
         boolean shouldStartMap = pkMap.getStart().tick(currentPlayer);
         if (shouldStartMap) {
-            instance.resetTimer();
-            instance.setTimed(true);
+            timer.reset();
+            timer.setEnabled(true);
+        }
+    }
+
+    @InfoString.DataClass
+    public class Timer implements FormatDecimals {
+        private int timeInTicks = 0;
+        private boolean enabled = false;
+
+        @InfoString.Getter
+        public int getTimeInTicks() {
+            return timeInTicks;
+        }
+        public void setTimeInTicks(int timeInTicks) {
+            this.timeInTicks = timeInTicks;
+        }
+
+        public boolean isEnabled() {
+            return enabled;
+        }
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+        public void reset() {
+            setTimeInTicks(getCurrentMap().getStartTime());
+        }
+        public void increment() {
+            setTimeInTicks(getTimeInTicks() + 1);
+        }
+
+        @Override
+        public String formatDecimals(int decimals, boolean keepZeros) {
+            return MathUtil.formatDecimals((double) getTimeInTicks() / 20, decimals, keepZeros) + "s";
         }
     }
 }
