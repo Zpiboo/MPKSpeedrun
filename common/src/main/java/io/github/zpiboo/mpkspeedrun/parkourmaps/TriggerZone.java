@@ -2,6 +2,7 @@ package io.github.zpiboo.mpkspeedrun.parkourmaps;
 
 import java.util.Arrays;
 
+import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import org.json.JSONObject;
 
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
@@ -10,9 +11,12 @@ import io.github.kurrycat.mpkmod.util.Vector3D;
 import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
 import io.github.zpiboo.mpkspeedrun.util.BB3D;
 
+@InfoString.DataClass
 public class TriggerZone {
-    private BoundingBox3D zone;
+    private BoundingBox3D box;
     private TriggerMode mode;
+
+    private int triggerAirtime = 0;
 
     @SuppressWarnings("unused") public static final TriggerZone ZERO = new TriggerZone();
 
@@ -27,22 +31,24 @@ public class TriggerZone {
         }
     }
 
-    public TriggerZone(BoundingBox3D zone, TriggerMode mode) {
-        this.zone = new BoundingBox3D(zone.getMin(), zone.getMax());
+    public TriggerZone(BoundingBox3D box, TriggerMode mode) {
+        this.box = new BoundingBox3D(box.getMin(), box.getMax());
         this.mode = mode;
     }
     public TriggerZone() {
         this(BoundingBox3D.ZERO, TriggerMode.POS_ENTER);
     }
 
-    public BoundingBox3D getZone() {
-        return zone;
+    @InfoString.Getter
+    public BoundingBox3D getBox() {
+        return box;
     }
     @SuppressWarnings("unused")
-    public void setZone(BoundingBox3D zone) {
-        this.zone = zone;
+    public void setBox(BoundingBox3D box) {
+        this.box = box;
     }
 
+    @InfoString.Getter
     public TriggerMode getMode() {
         return mode;
     }
@@ -50,7 +56,15 @@ public class TriggerZone {
         this.mode = mode;
     }
 
-    public boolean shouldTrigger(Player player) {
+    @InfoString.Getter
+    public int getAirtime() {
+        return triggerAirtime;
+    }
+    public void setAirtime(int triggerAirtime) {
+        this.triggerAirtime = triggerAirtime;
+    }
+
+    private boolean shouldTrigger(Player player) {
         final Vector3D currPos = player.getPos();
         final Vector3D lastPos = player.getLastPos();
         final BoundingBox3D currBb = player.getBoundingBox();
@@ -58,35 +72,45 @@ public class TriggerZone {
 
         switch (mode) {
             case POS_ENTER:
-                return BB3D.contains(zone, currPos) && !BB3D.contains(zone, lastPos);
+                return BB3D.contains(box, currPos) && !BB3D.contains(box, lastPos);
 
             case BOX_ENTER:
-                return BB3D.intersect(zone, currBb) && !BB3D.intersect(zone, lastBb);
+                return BB3D.intersect(box, currBb) && !BB3D.intersect(box, lastBb);
 
             case POS_EXIT:
-                return BB3D.contains(zone, lastPos) && !BB3D.contains(zone, currPos);
+                return BB3D.contains(box, lastPos) && !BB3D.contains(box, currPos);
 
             case BOX_EXIT:
-                return BB3D.intersect(zone, lastBb) && !BB3D.intersect(zone, currBb);
+                return BB3D.intersect(box, lastBb) && !BB3D.intersect(box, currBb);
 
             default: return false;
         }
+    }
+
+    public boolean tick(Player player) {
+        boolean shouldTrigger = shouldTrigger(player);
+
+        if (shouldTrigger) {
+            setAirtime(player.getAirtime());
+        }
+
+        return shouldTrigger;
     }
 
     public JSONObject toJson() {
         return new JSONObject()
                 .put("mode", mode.toString())
 
-                .put("minx", zone.minX())
-                .put("miny", zone.minY())
-                .put("minz", zone.minZ())
+                .put("minx", box.minX())
+                .put("miny", box.minY())
+                .put("minz", box.minZ())
 
-                .put("maxx", zone.maxX())
-                .put("maxy", zone.maxY())
-                .put("maxz", zone.maxZ());
+                .put("maxx", box.maxX())
+                .put("maxy", box.maxY())
+                .put("maxz", box.maxZ());
     }
-    public static TriggerZone fromJson(JSONObject zoneJson) {
-        String modeString = zoneJson.optString("mode", "POS_ENTER");
+    public static TriggerZone fromJson(JSONObject boxJson) {
+        String modeString = boxJson.optString("mode", "POS_ENTER");
         TriggerMode mode;
         try {
             mode = TriggerMode.valueOf(modeString);
@@ -95,18 +119,18 @@ public class TriggerZone {
             MPKSpeedrun.LOGGER.warn("Trigger mode not found: {}", modeString);
         }
 
-        double minX = zoneJson.optDouble("minx", 0);
-        double minY = zoneJson.optDouble("miny", 0);
-        double minZ = zoneJson.optDouble("minz", 0);
-        double maxX = zoneJson.optDouble("maxx", 0);
-        double maxY = zoneJson.optDouble("maxy", 0);
-        double maxZ = zoneJson.optDouble("maxz", 0);
+        double minX = boxJson.optDouble("minx", 0);
+        double minY = boxJson.optDouble("miny", 0);
+        double minZ = boxJson.optDouble("minz", 0);
+        double maxX = boxJson.optDouble("maxx", 0);
+        double maxY = boxJson.optDouble("maxy", 0);
+        double maxZ = boxJson.optDouble("maxz", 0);
 
-        BoundingBox3D zone = new BoundingBox3D(
+        BoundingBox3D box = new BoundingBox3D(
                 new Vector3D(minX, minY, minZ),
                 new Vector3D(maxX, maxY, maxZ)
         );
 
-        return new TriggerZone(zone, mode);
+        return new TriggerZone(box, mode);
     }
 }

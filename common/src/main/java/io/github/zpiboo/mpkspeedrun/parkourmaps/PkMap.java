@@ -1,7 +1,6 @@
 package io.github.zpiboo.mpkspeedrun.parkourmaps;
 
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
-import io.github.kurrycat.mpkmod.util.BoundingBox3D;
 import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
 import io.github.zpiboo.mpkspeedrun.util.FileUtil;
 import org.json.JSONObject;
@@ -29,11 +28,6 @@ public class PkMap implements Comparable<PkMap> {
     }
 
     @InfoString.Getter
-    public BoundingBox3D getStartBox() { return start != null ? start.getZone() : null; }
-    @InfoString.Getter
-    public BoundingBox3D getFinishBox() { return finish != null ? finish.getZone() : null; }
-
-    @InfoString.Getter
     public String getName() { return name; }
 
     public void setName(String name) {
@@ -48,6 +42,7 @@ public class PkMap implements Comparable<PkMap> {
         return "Map " + num;
     }
 
+    @InfoString.Getter
     public TriggerZone getStart() {
         return start;
     }
@@ -55,6 +50,7 @@ public class PkMap implements Comparable<PkMap> {
         this.start = start;
     }
 
+    @InfoString.Getter
     public TriggerZone getFinish() {
         return finish;
     }

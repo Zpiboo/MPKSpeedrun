@@ -119,8 +119,8 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
 
             TriggerZone mapStart = map.getStart();
             TriggerZone mapFinish = map.getFinish();
-            BoundingBox3D startZone = mapStart.getZone();
-            BoundingBox3D finishZone = mapFinish.getZone();
+            BoundingBox3D startZone = mapStart.getBox();
+            BoundingBox3D finishZone = mapFinish.getBox();
             for (FieldName fieldName : FieldName.values()) {
                 InputField startField = createInputField(startZone, fieldName);
                 startFields.add(startField);
