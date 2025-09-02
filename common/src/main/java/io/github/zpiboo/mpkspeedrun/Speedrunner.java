@@ -7,6 +7,7 @@ import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.util.FormatDecimals;
 import io.github.kurrycat.mpkmod.util.MathUtil;
 import io.github.zpiboo.mpkspeedrun.parkourmaps.PkMap;
+import io.github.zpiboo.mpkspeedrun.util.BB3D;
 
 public class Speedrunner {
     @InfoString.AccessInstance
@@ -84,15 +85,26 @@ public class Speedrunner {
 
         if (timer.isEnabled()) {
             boolean shouldFinishMap = pkMap.getFinish().tick(currentPlayer);
-            if (shouldFinishMap)
+            if (shouldFinishMap) {
                 timer.setEnabled(false);
-            else
+                timer.setSubtick(timer.getSubtick() + BB3D.slabMethod(
+                        previousPlayer.getPos(),
+                        currentPlayer.getPos(),
+                        getCurrentMap().getFinish().getBox()
+                ));
+            } else {
                 timer.increment();
+            }
         }
 
         boolean shouldStartMap = pkMap.getStart().tick(currentPlayer);
         if (shouldStartMap) {
             timer.reset();
+            timer.setSubtick(BB3D.slabMethod(
+                    currentPlayer.getPos(),
+                    previousPlayer.getPos(),
+                    getCurrentMap().getStart().getBox()
+            ) - 1);
             timer.setEnabled(true);
         }
     }
@@ -100,6 +112,8 @@ public class Speedrunner {
     @InfoString.DataClass
     public class Timer implements FormatDecimals {
         private int timeInTicks = 0;
+        private double subtick = 0.0D;
+        private final SubtickTimerFormat subtickTimer = new SubtickTimerFormat();
         private boolean enabled = false;
 
         @InfoString.Getter
@@ -108,6 +122,14 @@ public class Speedrunner {
         }
         public void setTimeInTicks(int timeInTicks) {
             this.timeInTicks = timeInTicks;
+        }
+
+        @InfoString.Getter
+        public double getSubtick() {
+            return subtick;
+        }
+        public void setSubtick(double subtick) {
+            this.subtick = subtick;
         }
 
         public boolean isEnabled() {
@@ -119,6 +141,7 @@ public class Speedrunner {
 
         public void reset() {
             setTimeInTicks(getCurrentMap().getStartTime());
+            setSubtick(0.0D);
         }
         public void increment() {
             setTimeInTicks(getTimeInTicks() + 1);
@@ -127,6 +150,22 @@ public class Speedrunner {
         @Override
         public String formatDecimals(int decimals, boolean keepZeros) {
             return MathUtil.formatDecimals((double) getTimeInTicks() / 20, decimals, keepZeros) + "s";
+        }
+
+        @InfoString.Getter
+        public SubtickTimerFormat getWithSubtick() {
+            return subtickTimer;
+        }
+
+        public class SubtickTimerFormat implements FormatDecimals {
+            @Override
+            public String formatDecimals(int decimals, boolean keepZeros) {
+                return MathUtil.formatDecimals(
+                        (double) getTimeInTicks() / 20 + subtick * 0.05D,
+                        decimals,
+                        keepZeros
+                ) + "s";
+            }
         }
     }
 }
