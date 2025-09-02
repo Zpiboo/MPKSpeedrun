@@ -24,7 +24,12 @@ public class MPKSpeedrun implements MPKModule {
     public static final Logger LOGGER = LogManager.getLogger(MODULE_NAME);
 
     public void init() {
-        addClassesToClassesTxt(new Class[] { Speedrunner.class, PkMap.class, TriggerZone.class });
+        addClassesToClassesTxt(new Class[] {
+                Speedrunner.class,
+                Speedrunner.Timer.class,
+                PkMap.class,
+                TriggerZone.class
+        });
         FileUtil.init();
 
         API.registerGUIScreen("maps_gui", new PkMapsGUIScreen());
@@ -32,7 +37,7 @@ public class MPKSpeedrun implements MPKModule {
 
     public void loaded() {
         Proxy.init(Minecraft.getMcVersion());
-        EventAPI.addListener(EventAPI.EventListener.onTickEnd(Speedrunner::onTickEnd));
+        EventAPI.addListener(EventAPI.EventListener.onTickEnd(Speedrunner.instance::onTickEnd));
     }
 
     public void addClassesToClassesTxt(Class<?>[] classes) {
