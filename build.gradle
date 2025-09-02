@@ -33,7 +33,7 @@ subprojects { Project p ->
     }
 
     dependencies {
-        compileOnly 'com.github.kurrycat2004:MPKMod_2:2.0.0-pre.11'
+        compileOnly 'com.github.MPKMod:MPKMod2:2.0.0'
 
         if (p.name.startsWith('forge') || p.name.startsWith('fabric')) {
             implementation project(':common-api')
