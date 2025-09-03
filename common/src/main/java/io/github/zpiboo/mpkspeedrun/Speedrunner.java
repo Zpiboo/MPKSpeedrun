@@ -87,11 +87,7 @@ public class Speedrunner {
             boolean shouldFinishMap = pkMap.getFinish().tick(currentPlayer);
             if (shouldFinishMap) {
                 timer.setEnabled(false);
-                timer.setSubtick(timer.getSubtick() + BB3D.slabMethod(
-                        previousPlayer.getPos(),
-                        currentPlayer.getPos(),
-                        getCurrentMap().getFinish().getBox()
-                ));
+                timer.setSubtick(timer.getSubtick() + getCurrentMap().getFinish().getSubtick());
             } else {
                 timer.increment();
             }
@@ -100,11 +96,7 @@ public class Speedrunner {
         boolean shouldStartMap = pkMap.getStart().tick(currentPlayer);
         if (shouldStartMap) {
             timer.reset();
-            timer.setSubtick(BB3D.slabMethod(
-                    currentPlayer.getPos(),
-                    previousPlayer.getPos(),
-                    getCurrentMap().getStart().getBox()
-            ) - 1);
+            timer.setSubtick(-getCurrentMap().getStart().getSubtick());
             timer.setEnabled(true);
         }
     }
