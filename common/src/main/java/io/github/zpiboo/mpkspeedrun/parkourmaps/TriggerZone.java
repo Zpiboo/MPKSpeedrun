@@ -1,22 +1,23 @@
 package io.github.zpiboo.mpkspeedrun.parkourmaps;
 
-import java.util.Arrays;
-
-import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
-import org.json.JSONObject;
-
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
+import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.util.BoundingBox3D;
 import io.github.kurrycat.mpkmod.util.Vector3D;
 import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
 import io.github.zpiboo.mpkspeedrun.util.BB3D;
+import org.json.JSONObject;
+
+import java.util.Arrays;
 
 @InfoString.DataClass
 public class TriggerZone {
     private BoundingBox3D box;
     private TriggerMode mode;
 
-    private int triggerAirtime = 0;
+    public boolean shouldTrigger = false;
+    private int lastAirtime = 0;
+    private double lastSubtick = 0.0D;
 
     @SuppressWarnings("unused") public static final TriggerZone ZERO = new TriggerZone();
 
@@ -58,10 +59,36 @@ public class TriggerZone {
 
     @InfoString.Getter
     public int getAirtime() {
-        return triggerAirtime;
+        return lastAirtime;
     }
-    public void setAirtime(int triggerAirtime) {
-        this.triggerAirtime = triggerAirtime;
+    public void setAirtime(int airtime) {
+        lastAirtime = airtime;
+    }
+
+    public double getSubtick() {
+        return lastSubtick;
+    }
+    public void setSubtick(double subtick) {
+        lastSubtick = subtick;
+    }
+
+    private double calculateSubtick(Player player) {
+        switch (mode) {
+            case POS_ENTER:
+                return BB3D.slabMethod(
+                        player.getLastPos(),
+                        player.getPos(),
+                        getBox()
+                );
+            case POS_EXIT:
+                return 1.0D - BB3D.slabMethod(
+                        player.getPos(),
+                        player.getLastPos(),
+                        getBox()
+                );
+
+            default: return 0.0D;
+        }
     }
 
     private boolean shouldTrigger(Player player) {
@@ -88,10 +115,11 @@ public class TriggerZone {
     }
 
     public boolean tick(Player player) {
-        boolean shouldTrigger = shouldTrigger(player);
+        shouldTrigger = shouldTrigger(player);
 
         if (shouldTrigger) {
             setAirtime(player.getAirtime());
+            setSubtick(calculateSubtick(player));
         }
 
         return shouldTrigger;

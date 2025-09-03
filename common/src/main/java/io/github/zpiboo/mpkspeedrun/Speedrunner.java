@@ -44,7 +44,7 @@ public class Speedrunner {
     }
     public void setCurrentMap(PkMap map) {
         currentMap = map;
-        timer.setTimeInTicks(0);
+        timer.reset();
         timer.setEnabled(false);
     }
 
@@ -87,11 +87,7 @@ public class Speedrunner {
             boolean shouldFinishMap = pkMap.getFinish().tick(currentPlayer);
             if (shouldFinishMap) {
                 timer.setEnabled(false);
-                timer.setSubtick(timer.getSubtick() + BB3D.slabMethod(
-                        previousPlayer.getPos(),
-                        currentPlayer.getPos(),
-                        getCurrentMap().getFinish().getBox()
-                ));
+                timer.setSubtick(timer.getSubtick() + getCurrentMap().getFinish().getSubtick());
             } else {
                 timer.increment();
             }
@@ -99,18 +95,14 @@ public class Speedrunner {
 
         boolean shouldStartMap = pkMap.getStart().tick(currentPlayer);
         if (shouldStartMap) {
-            timer.reset();
-            timer.setSubtick(BB3D.slabMethod(
-                    currentPlayer.getPos(),
-                    previousPlayer.getPos(),
-                    getCurrentMap().getStart().getBox()
-            ) - 1);
+            timer.setTimeInTicks(getCurrentMap().getStartTime());
+            timer.setSubtick(-getCurrentMap().getStart().getSubtick());
             timer.setEnabled(true);
         }
     }
 
     @InfoString.DataClass
-    public class Timer implements FormatDecimals {
+    public static class Timer implements FormatDecimals {
         private int timeInTicks = 0;
         private double subtick = 0.0D;
         private final SubtickTimerFormat subtickTimer = new SubtickTimerFormat();
@@ -140,7 +132,7 @@ public class Speedrunner {
         }
 
         public void reset() {
-            setTimeInTicks(getCurrentMap().getStartTime());
+            setTimeInTicks(0);
             setSubtick(0.0D);
         }
         public void increment() {
