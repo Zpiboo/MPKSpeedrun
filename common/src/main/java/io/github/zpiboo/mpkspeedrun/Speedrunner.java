@@ -44,7 +44,7 @@ public class Speedrunner {
     }
     public void setCurrentMap(PkMap map) {
         currentMap = map;
-        timer.setTimeInTicks(0);
+        timer.reset();
         timer.setEnabled(false);
     }
 
@@ -95,7 +95,7 @@ public class Speedrunner {
 
         boolean shouldStartMap = pkMap.getStart().tick(currentPlayer);
         if (shouldStartMap) {
-            timer.reset();
+            timer.setTimeInTicks(getCurrentMap().getStartTime());
             timer.setSubtick(-getCurrentMap().getStart().getSubtick());
             timer.setEnabled(true);
         }
@@ -132,7 +132,7 @@ public class Speedrunner {
         }
 
         public void reset() {
-            setTimeInTicks(getCurrentMap().getStartTime());
+            setTimeInTicks(0);
             setSubtick(0.0D);
         }
         public void increment() {
