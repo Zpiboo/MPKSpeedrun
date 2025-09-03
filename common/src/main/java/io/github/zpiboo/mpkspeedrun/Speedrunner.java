@@ -102,7 +102,7 @@ public class Speedrunner {
     }
 
     @InfoString.DataClass
-    public class Timer implements FormatDecimals {
+    public static class Timer implements FormatDecimals {
         private int timeInTicks = 0;
         private double subtick = 0.0D;
         private final SubtickTimerFormat subtickTimer = new SubtickTimerFormat();

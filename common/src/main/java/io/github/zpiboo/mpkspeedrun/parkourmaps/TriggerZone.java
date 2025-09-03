@@ -1,15 +1,14 @@
 package io.github.zpiboo.mpkspeedrun.parkourmaps;
 
-import java.util.Arrays;
-
-import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
-import org.json.JSONObject;
-
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
+import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.util.BoundingBox3D;
 import io.github.kurrycat.mpkmod.util.Vector3D;
 import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
 import io.github.zpiboo.mpkspeedrun.util.BB3D;
+import org.json.JSONObject;
+
+import java.util.Arrays;
 
 @InfoString.DataClass
 public class TriggerZone {
