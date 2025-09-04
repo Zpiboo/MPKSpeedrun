@@ -19,11 +19,5 @@ include(
     ':common',
     ':common-api',
     ':forge-1.8.9',
-    ':fabric-1.19.4',
-    ':fabric-1.20.4',
-    ':fabric-1.20.6',
-    ':fabric-1.21',
-    ':fabric-1.21.3',
-    ':fabric-1.21.5',
     ':fabric-1.21.6'
 )

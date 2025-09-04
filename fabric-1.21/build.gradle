@@ -1,8 +1,0 @@
-plugins {
-    id 'fabric-loom' version '1.11-SNAPSHOT'
-}
-
-dependencies {
-    minecraft 'com.mojang:minecraft:1.21'
-    mappings 'net.fabricmc:yarn:1.21+build.9:v2'
-}
