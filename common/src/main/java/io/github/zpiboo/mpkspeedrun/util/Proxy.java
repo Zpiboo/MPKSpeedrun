@@ -34,24 +34,8 @@ public class Proxy {
 
         if (minor == 8 && patch == 9) {
             return "forge_1_8_9";
-        } else if (minor == 19 && patch == 4) {
-            return "fabric_1_19_4";
-        } else if (minor == 20) {
-            if (4 <= patch && patch < 6) {
-                return "fabric_1_20_4";
-            } else if (patch == 6) {
-                return "fabric_1_20_6";
-            }
-        } else if (minor == 21) {
-            if (0 <= patch && patch < 2) {
-                return "fabric_1_21";
-            } else if (2 <= patch && patch < 5) {
-                return "fabric_1_21_3";
-            } else if (patch == 5) {
-                return "fabric_1_21_5";
-            } else if (6 <= patch && patch < 9) {
-                return "fabric_1_21_6";
-            }
+        } else if (minor == 21 && 6 <= patch && patch < 9) {
+            return "fabric_1_21_6";
         }
         return null;
     }
