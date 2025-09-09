@@ -239,7 +239,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
         }
 
         private void setupField(InputField field) {
-            field.setWidth(FontRenderer.getStringSize(field.name).getX() + 60);
+            field.setWidth(FontRenderer.getStringSize(field.name).getX() + 60, false);
         }
         private void renderFields(List<InputField> fields, Vector2D offset, Vector2D mouse) {
             double xOffset = fields.get(0).getDisplayedSize().getX() + 5;
