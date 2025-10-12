@@ -1,4 +1,4 @@
-package io.github.zpiboo.mpkspeedrun.compatibility.fabric_1_21_6.world;
+package io.github.zpiboo.mpkspeedrun.compatibility.forge_1_12_2.world;
 
 import io.github.zpiboo.mpkspeedrun.api.world.IBlock;
 
@@ -9,6 +9,7 @@ public class BlockImpl implements IBlock {
         this.id = id;
     }
 
+    @Override
     public String getID() {
         return id;
     }
