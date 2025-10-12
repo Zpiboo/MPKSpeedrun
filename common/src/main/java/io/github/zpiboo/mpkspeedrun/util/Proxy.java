@@ -34,8 +34,10 @@ public class Proxy {
 
         if (minor == 8 && patch == 9) {
             return "forge_1_8_9";
-        } else if (minor == 21 && 6 <= patch && patch < 9) {
-            return "fabric_1_21_6";
+        } else if (minor == 12 && patch == 2) {
+            return "forge_1_12_2";
+        } else if (minor == 21 && 9 <= patch && patch <= 10) {
+            return "fabric_1_21_9";
         }
         return null;
     }
