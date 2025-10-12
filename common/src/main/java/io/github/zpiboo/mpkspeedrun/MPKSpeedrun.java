@@ -36,7 +36,11 @@ public class MPKSpeedrun implements MPKModule {
     }
 
     public void loaded() {
-        Proxy.init(Minecraft.getMcVersion());
+        if (!Proxy.init(Minecraft.getMcVersion()))
+            LOGGER.error(
+                    "Failed initializing the version compatibility proxy. " +
+                    "Version specific features might not work as expected, if at all."
+            );
         EventAPI.addListener(EventAPI.EventListener.onTickEnd(Speedrunner.instance::onTickEnd));
     }
 
