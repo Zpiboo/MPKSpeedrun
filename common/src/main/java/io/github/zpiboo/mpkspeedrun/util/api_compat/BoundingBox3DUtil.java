@@ -1,9 +1,9 @@
-package io.github.zpiboo.mpkspeedrun.util;
+package io.github.zpiboo.mpkspeedrun.util.api_compat;
 
 import io.github.kurrycat.mpkmod.util.BoundingBox3D;
 import io.github.kurrycat.mpkmod.util.Vector3D;
 
-public class BB3D {
+public class BoundingBox3DUtil {
     public static boolean contains(BoundingBox3D bb, Vector3D vec) {
         return
                 bb.minX() <= vec.getX() && vec.getX() <= bb.maxX() &&

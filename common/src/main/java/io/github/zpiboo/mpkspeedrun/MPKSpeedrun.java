@@ -7,9 +7,9 @@ import io.github.kurrycat.mpkmod.events.EventAPI;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.modules.MPKModule;
 import io.github.kurrycat.mpkmod.util.ClassUtil;
-import io.github.zpiboo.mpkspeedrun.parkourmaps.PkMap;
-import io.github.zpiboo.mpkspeedrun.parkourmaps.TriggerZone;
-import io.github.zpiboo.mpkspeedrun.parkourmaps.gui.PkMapsGUIScreen;
+import io.github.zpiboo.mpkspeedrun.pkmaps.core.PkMap;
+import io.github.zpiboo.mpkspeedrun.pkmaps.core.TriggerZone;
+import io.github.zpiboo.mpkspeedrun.pkmaps.gui.screen.PkMapsGUIScreen;
 import io.github.zpiboo.mpkspeedrun.util.FileUtil;
 import io.github.zpiboo.mpkspeedrun.util.Proxy;
 import org.apache.logging.log4j.LogManager;
@@ -30,7 +30,8 @@ public class MPKSpeedrun implements MPKModule {
                 PkMap.class,
                 TriggerZone.class
         });
-        FileUtil.init();
+
+        FileUtil.registerConfigDir("maps");
 
         API.registerGUIScreen("maps_gui", new PkMapsGUIScreen());
     }

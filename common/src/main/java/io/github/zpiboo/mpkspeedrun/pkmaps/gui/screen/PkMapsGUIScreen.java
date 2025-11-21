@@ -1,11 +1,11 @@
-package io.github.zpiboo.mpkspeedrun.parkourmaps.gui;
+package io.github.zpiboo.mpkspeedrun.pkmaps.gui.screen;
 
 import io.github.kurrycat.mpkmod.gui.ComponentScreen;
 import io.github.kurrycat.mpkmod.gui.components.Anchor;
 import io.github.kurrycat.mpkmod.gui.components.Button;
 import io.github.kurrycat.mpkmod.util.Vector2D;
-import io.github.zpiboo.mpkspeedrun.parkourmaps.PkMap;
-import io.github.zpiboo.mpkspeedrun.util.FileUtil;
+import io.github.zpiboo.mpkspeedrun.pkmaps.core.PkMap;
+import io.github.zpiboo.mpkspeedrun.pkmaps.io.PkMapIO;
 
 import java.io.File;
 import java.util.Set;
@@ -24,8 +24,8 @@ public class PkMapsGUIScreen extends ComponentScreen {
 
         loadMaps();
         mapList = new PkMapList(
-                new Vector2D(0, 0.05),
-                new Vector2D(0.6, 0.9),
+                new Vector2D(0.00D, 0.05D),
+                new Vector2D(0.60D, 0.90D),
                 maps
         );
         addChild(mapList, PERCENT.ALL, Anchor.TOP_CENTER);
@@ -39,24 +39,26 @@ public class PkMapsGUIScreen extends ComponentScreen {
                 PERCENT.NONE, Anchor.CENTER_RIGHT
         );
     }
+
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
+        closeAllPanes();
+    }
 
-        for (PkMap pkMap : mapList.maps)
-            pkMap.save();
-        mapList.updateList();
+    public void updateMapList() {
+        mapList.updateComponents();
     }
 
     public void loadMaps() {
         maps.clear();
 
-        File[] files = FileUtil.MAP_FOLDER.listFiles((dir, filename) -> filename.endsWith(".json"));
+        File[] files = PkMapIO.MAP_FOLDER.listFiles((dir, filename) -> filename.endsWith(".json"));
         if (files == null) return;
 
         for (File mapFile : files) {
-            PkMap pkMap = PkMap.load(mapFile.getName().substring(0, mapFile.getName().length() - 5));
-            if (pkMap != null) maps.add(pkMap);
+            PkMap map = PkMapIO.load(mapFile);
+            if (map != null) maps.add(map);
         }
     }
 }

@@ -1,0 +1,226 @@
+package io.github.zpiboo.mpkspeedrun.pkmaps.core;
+
+import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
+import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
+import io.github.kurrycat.mpkmod.util.BoundingBox3D;
+import io.github.kurrycat.mpkmod.util.Vector3D;
+import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
+import io.github.zpiboo.mpkspeedrun.util.api_compat.BoundingBox3DUtil;
+import io.github.zpiboo.mpkspeedrun.util.api_compat.PlayerUtil;
+import io.github.zpiboo.mpkspeedrun.util.misc.ChoiceEnum;
+import org.json.JSONObject;
+
+@InfoString.DataClass
+public class TriggerZone {
+    private BoundingBox3D box;
+    private TriggerMode triggerMode;
+    private PosMode posMode;
+    private boolean useLandingPos;
+
+    public boolean shouldTrigger = false;
+    private int lastAirtime = 0;
+    private double lastSubtick = 0.0D;
+
+    @SuppressWarnings("unused") public static final TriggerZone ZERO = new TriggerZone();
+
+    public enum TriggerMode implements ChoiceEnum<TriggerMode> {
+        ENTER, EXIT
+    }
+    public enum PosMode implements ChoiceEnum<PosMode> {
+        POS, BOX
+    }
+
+    public TriggerZone(BoundingBox3D box, TriggerMode triggerMode, PosMode posMode, boolean useLandingPos) {
+        this.box = new BoundingBox3D(box.getMin(), box.getMax());
+        this.triggerMode = triggerMode;
+        this.posMode = posMode;
+        this.useLandingPos = useLandingPos;
+    }
+    public TriggerZone() {
+        this(BoundingBox3D.ZERO, TriggerMode.ENTER, PosMode.POS, false);
+    }
+
+    @InfoString.Getter
+    public BoundingBox3D getBox() {
+        return box;
+    }
+    @SuppressWarnings("unused")
+    public void setBox(BoundingBox3D box) {
+        this.box = box;
+    }
+
+    @InfoString.Getter
+    public TriggerMode getTriggerMode() {
+        return triggerMode;
+    }
+    public void setTriggerMode(TriggerMode triggerMode) {
+        this.triggerMode = triggerMode;
+    }
+
+    @InfoString.Getter
+    public PosMode getPosMode() {
+        return posMode;
+    }
+    public void setPosMode(PosMode posMode) {
+        this.posMode = posMode;
+    }
+
+    @InfoString.Getter
+    public boolean isUsingLandingPos() {
+        return useLandingPos;
+    }
+    public void setUsingLandingPos(boolean useLandingPos) {
+        this.useLandingPos = useLandingPos;
+    }
+
+    @InfoString.Getter
+    public int getAirtime() {
+        return lastAirtime;
+    }
+    public void setAirtime(int airtime) {
+        lastAirtime = airtime;
+    }
+
+    public double getSubtick() {
+        return lastSubtick;
+    }
+    public void setSubtick(double subtick) {
+        lastSubtick = subtick;
+    }
+
+
+    private Vector3D getAdaptedPos(Player player) {
+        return useLandingPos
+                ? PlayerUtil.getLandingPos(player)
+                : player.getPos();
+    }
+    private BoundingBox3D getAdaptedBB(Player player) {
+        return useLandingPos
+                ? PlayerUtil.getLandingBB(player)
+                : player.getBoundingBox();
+    }
+
+    private double calculateSubtick(Player player) {
+        // TODO: Implement subtick calculation for BOX position mode
+        if (posMode != PosMode.POS) return 0.0D;
+
+        Vector3D lastPos = getAdaptedPos(player.getPrevious());
+        Vector3D currPos = getAdaptedPos(player);
+
+        switch (triggerMode) {
+            case ENTER:
+                return BoundingBox3DUtil.slabMethod(
+                        lastPos,
+                        currPos,
+                        this.getBox()
+                );
+            case EXIT:
+                return 1.0D - BoundingBox3DUtil.slabMethod(
+                        currPos,
+                        lastPos,
+                        this.getBox()
+                );
+
+            default: return 0.0D;
+        }
+    }
+
+    private boolean shouldTrigger(Player player) {
+        Vector3D currPos = getAdaptedPos(player);
+        Vector3D lastPos = getAdaptedPos(player.getPrevious());
+        BoundingBox3D currBb = getAdaptedBB(player);
+        BoundingBox3D lastBb = getAdaptedBB(player.getPrevious());
+
+        switch (triggerMode) {
+            case ENTER:
+            switch (posMode) {
+                case POS:  // POS ENTER
+                return BoundingBox3DUtil.contains(box, currPos) && !BoundingBox3DUtil.contains(box, lastPos);
+
+                case BOX:  // BOX ENTER
+                return BoundingBox3DUtil.intersect(box, currBb) && !BoundingBox3DUtil.intersect(box, lastBb);
+            }
+
+            case EXIT:
+            switch (posMode) {
+                case POS:  // POS EXIT
+                return BoundingBox3DUtil.contains(box, lastPos) && !BoundingBox3DUtil.contains(box, currPos);
+
+                case BOX:  // BOX EXIT
+                return BoundingBox3DUtil.intersect(box, lastBb) && !BoundingBox3DUtil.intersect(box, currBb);
+            }
+
+            default: return false;
+        }
+    }
+
+    public boolean tick(Player player) {
+        shouldTrigger = shouldTrigger(player);
+
+        if (shouldTrigger) {
+            setAirtime(player.getAirtime());
+            setSubtick(calculateSubtick(player));
+        }
+
+        return shouldTrigger;
+    }
+
+    public JSONObject toJson() {
+        return new JSONObject()
+                .put("trigger_on", triggerMode.toString())
+                .put("pos_mode", posMode.toString())
+                .put("use_landing_pos", useLandingPos)
+
+                .put("minx", box.minX())
+                .put("miny", box.minY())
+                .put("minz", box.minZ())
+
+                .put("maxx", box.maxX())
+                .put("maxy", box.maxY())
+                .put("maxz", box.maxZ());
+    }
+    public static TriggerZone fromJson(JSONObject boxJson) {
+        String legacyModeString = boxJson.optString("mode");  // TODO: remove this for the first release (v1.0.0!!!) (after beta test)
+
+        String triggerModeString = boxJson.optString("trigger_on");
+        String posModeString = boxJson.optString("pos_mode");
+
+        String[] modes = legacyModeString.split("_");
+        if (!legacyModeString.isEmpty() && modes.length == 2) {
+            triggerModeString = modes[1];
+            posModeString = modes[0];
+        }
+
+        TriggerMode triggerMode;
+        PosMode posMode;
+
+        try {
+            triggerMode = TriggerMode.valueOf(triggerModeString);
+        } catch (IllegalArgumentException e) {
+            triggerMode = TriggerMode.ENTER;
+            MPKSpeedrun.LOGGER.warn("Trigger mode not found: {}", triggerModeString);
+        }
+        try {
+            posMode = PosMode.valueOf(posModeString);
+        } catch (IllegalArgumentException e) {
+            posMode = PosMode.POS;
+            MPKSpeedrun.LOGGER.warn("Position mode not found: {}", posModeString);
+        }
+
+        boolean useLandingPos = boxJson.optBoolean("use_landing_pos", false);
+
+        double minX = boxJson.optDouble("minx", 0);
+        double minY = boxJson.optDouble("miny", 0);
+        double minZ = boxJson.optDouble("minz", 0);
+        double maxX = boxJson.optDouble("maxx", 0);
+        double maxY = boxJson.optDouble("maxy", 0);
+        double maxZ = boxJson.optDouble("maxz", 0);
+
+        BoundingBox3D box = new BoundingBox3D(
+                new Vector3D(minX, minY, minZ),
+                new Vector3D(maxX, maxY, maxZ)
+        );
+
+        return new TriggerZone(box, triggerMode, posMode, useLandingPos);
+    }
+}
