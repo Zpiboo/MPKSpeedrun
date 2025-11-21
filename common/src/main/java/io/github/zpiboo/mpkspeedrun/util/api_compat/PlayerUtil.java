@@ -1,4 +1,4 @@
-package io.github.zpiboo.mpkspeedrun.util;
+package io.github.zpiboo.mpkspeedrun.util.api_compat;
 
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.util.BoundingBox3D;

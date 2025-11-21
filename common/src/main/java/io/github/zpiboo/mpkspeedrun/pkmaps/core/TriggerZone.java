@@ -1,13 +1,13 @@
-package io.github.zpiboo.mpkspeedrun.parkourmaps;
+package io.github.zpiboo.mpkspeedrun.pkmaps.core;
 
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.util.BoundingBox3D;
 import io.github.kurrycat.mpkmod.util.Vector3D;
 import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
-import io.github.zpiboo.mpkspeedrun.util.BB3D;
-import io.github.zpiboo.mpkspeedrun.util.ChoiceEnum;
-import io.github.zpiboo.mpkspeedrun.util.PlayerUtil;
+import io.github.zpiboo.mpkspeedrun.util.api_compat.BoundingBox3DUtil;
+import io.github.zpiboo.mpkspeedrun.util.api_compat.PlayerUtil;
+import io.github.zpiboo.mpkspeedrun.util.misc.ChoiceEnum;
 import org.json.JSONObject;
 
 @InfoString.DataClass
@@ -109,13 +109,13 @@ public class TriggerZone {
 
         switch (triggerMode) {
             case ENTER:
-                return BB3D.slabMethod(
+                return BoundingBox3DUtil.slabMethod(
                         lastPos,
                         currPos,
                         this.getBox()
                 );
             case EXIT:
-                return 1.0D - BB3D.slabMethod(
+                return 1.0D - BoundingBox3DUtil.slabMethod(
                         currPos,
                         lastPos,
                         this.getBox()
@@ -135,19 +135,19 @@ public class TriggerZone {
             case ENTER:
             switch (posMode) {
                 case POS:  // POS ENTER
-                return BB3D.contains(box, currPos) && !BB3D.contains(box, lastPos);
+                return BoundingBox3DUtil.contains(box, currPos) && !BoundingBox3DUtil.contains(box, lastPos);
 
                 case BOX:  // BOX ENTER
-                return BB3D.intersect(box, currBb) && !BB3D.intersect(box, lastBb);
+                return BoundingBox3DUtil.intersect(box, currBb) && !BoundingBox3DUtil.intersect(box, lastBb);
             }
 
             case EXIT:
             switch (posMode) {
                 case POS:  // POS EXIT
-                return BB3D.contains(box, lastPos) && !BB3D.contains(box, currPos);
+                return BoundingBox3DUtil.contains(box, lastPos) && !BoundingBox3DUtil.contains(box, currPos);
 
                 case BOX:  // BOX EXIT
-                return BB3D.intersect(box, lastBb) && !BB3D.intersect(box, currBb);
+                return BoundingBox3DUtil.intersect(box, lastBb) && !BoundingBox3DUtil.intersect(box, currBb);
             }
 
             default: return false;
@@ -180,7 +180,7 @@ public class TriggerZone {
                 .put("maxz", box.maxZ());
     }
     public static TriggerZone fromJson(JSONObject boxJson) {
-        String legacyModeString = boxJson.optString("mode");  // TODO: remove this for the first release (v1.0.0!!!)
+        String legacyModeString = boxJson.optString("mode");  // TODO: remove this for the first release (v1.0.0!!!) (after beta test)
 
         String triggerModeString = boxJson.optString("trigger_on");
         String posModeString = boxJson.optString("pos_mode");

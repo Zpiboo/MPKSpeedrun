@@ -6,8 +6,7 @@ import io.github.kurrycat.mpkmod.events.OnTickEndEvent;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.util.FormatDecimals;
 import io.github.kurrycat.mpkmod.util.MathUtil;
-import io.github.zpiboo.mpkspeedrun.parkourmaps.PkMap;
-import io.github.zpiboo.mpkspeedrun.util.BB3D;
+import io.github.zpiboo.mpkspeedrun.pkmaps.core.PkMap;
 
 public class Speedrunner {
     @InfoString.AccessInstance

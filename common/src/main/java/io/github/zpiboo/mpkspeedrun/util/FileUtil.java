@@ -1,14 +1,34 @@
 package io.github.zpiboo.mpkspeedrun.util;
 
 import java.io.File;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FileUtil {
-    public static final String MAP_FOLDER_PATH = "config/mpk/maps";
-    public static File MAP_FOLDER;
+    private static final String CONFIG_FOLDER = "config/mpk";
+    private static final Map<String, File> configDirs = new HashMap<>();
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void init() {
-        MAP_FOLDER = new File(MAP_FOLDER_PATH);
-        MAP_FOLDER.mkdir();
+    public static void registerConfigDir(String name) {
+        assertCorrectDirName(name);
+        File dir = Paths.get(CONFIG_FOLDER, name).toFile();
+
+        ensureDirExists(dir);
+        configDirs.put(name, dir);
+    }
+
+    private static void ensureDirExists(File dir) {
+        // noinspection ResultOfMethodCallIgnored
+        dir.mkdirs();
+    }
+
+    public static File getConfigDir(String name) {
+        assertCorrectDirName(name);
+        return configDirs.get(name);
+    }
+
+    private static void assertCorrectDirName(String name) {
+        if (name.contains("/"))
+            throw new IllegalArgumentException("Directory names cannot contain a '/' ('" + name + "').");
     }
 }
