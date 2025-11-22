@@ -1,12 +1,12 @@
 package io.github.zpiboo.mpkspeedrun;
 
-import io.github.kurrycat.mpkmod.compatibility.MCClasses.KeyBinding;
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
-import io.github.kurrycat.mpkmod.events.OnTickEndEvent;
+import io.github.kurrycat.mpkmod.events.OnTickStartEvent;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.util.FormatDecimals;
 import io.github.kurrycat.mpkmod.util.MathUtil;
 import io.github.zpiboo.mpkspeedrun.pkmaps.core.PkMap;
+import io.github.zpiboo.mpkspeedrun.util.misc.KeyBindings;
 
 public class Speedrunner {
     @InfoString.AccessInstance
@@ -48,55 +48,57 @@ public class Speedrunner {
     }
 
 
-    public void onTickEnd(@SuppressWarnings("unused") OnTickEndEvent evt) {
-        final Player currentPlayer = Player.getLatest();
-        final Player previousPlayer = Player.getBeforeLatest();
-
-        if (currentPlayer == null || previousPlayer == null) return;
-
-        int inputX = 0, inputY = 0;
-        if (KeyBinding.getByName("key.forward").isKeyDown()) inputY = 1;
-        if (KeyBinding.getByName("key.left").isKeyDown()) inputX = -1;
-        if (KeyBinding.getByName("key.back").isKeyDown()) inputY -= 1;
-        if (KeyBinding.getByName("key.right").isKeyDown()) inputX += 1;
-
-        final boolean wasMoving = isMoving;
-        isMoving = inputX != 0 || inputY != 0;
-
-        if (currentPlayer.isOnGround()) {
-            groundtime = previousPlayer.isOnGround()
-                    ? groundtime + 1
-                    : 0;
-
-            if (isMoving)
-                if (previousPlayer.isOnGround())
-                    if (wasMoving)
-                        runTicks += 1;
-                    else
-                        runTicks = 1;
-                else
-                    runTicks = 0;
-        }
-
+    public void onTickStart(@SuppressWarnings("unused") OnTickStartEvent evt) {
+        Player currPlayer = Player.getLatest();
+        if (currPlayer == null) return;
 
         final PkMap pkMap = getCurrentMap();
-        if (pkMap == null) return;
+        if (pkMap != null) {
+            if (timer.isEnabled()) {
+                boolean shouldFinishMap = pkMap.getFinish().tick(currPlayer);
+                if (shouldFinishMap) {
+                    timer.setEnabled(false);
+                    timer.setSubtick(timer.getSubtick() + getCurrentMap().getFinish().getSubtick());
+                } else {
+                    timer.increment();
+                }
+            }
 
-        if (timer.isEnabled()) {
-            boolean shouldFinishMap = pkMap.getFinish().tick(currentPlayer);
-            if (shouldFinishMap) {
-                timer.setEnabled(false);
-                timer.setSubtick(timer.getSubtick() + getCurrentMap().getFinish().getSubtick());
-            } else {
-                timer.increment();
+            boolean shouldStartMap = pkMap.getStart().tick(currPlayer);
+            if (shouldStartMap) {
+                timer.setTimeInTicks(getCurrentMap().getStartTime());
+                timer.setSubtick(-getCurrentMap().getStart().getSubtick());
+                timer.setEnabled(true);
             }
         }
 
-        boolean shouldStartMap = pkMap.getStart().tick(currentPlayer);
-        if (shouldStartMap) {
-            timer.setTimeInTicks(getCurrentMap().getStartTime());
-            timer.setSubtick(-getCurrentMap().getStart().getSubtick());
-            timer.setEnabled(true);
+        Player prevPlayer = currPlayer.getPrevious();
+        if (prevPlayer == null) return;
+
+        if (currPlayer.isOnGround()) {
+            if (prevPlayer.isOnGround())
+                groundtime++;
+            else
+                groundtime = 0;
+        }
+
+        int inputX = 0, inputY = 0;
+        if (KeyBindings.KEY_FORWARD.isKeyDown()) inputY = 1;
+        if (KeyBindings.KEY_LEFT.isKeyDown()) inputX = 1;
+        if (KeyBindings.KEY_BACK.isKeyDown()) inputY -= 1;
+        if (KeyBindings.KEY_RIGHT.isKeyDown()) inputX -= 1;
+
+        boolean wasMoving = isMoving;
+        isMoving = inputX != 0 || inputY != 0;
+
+        boolean isOnGround = currPlayer.isOnGround();
+        boolean wasOnGround = prevPlayer.isOnGround();
+
+        if (isMoving && isOnGround) {
+            if (wasMoving)
+                runTicks++;
+            if (!wasOnGround || !wasMoving)
+                runTicks = 0;
         }
     }
 

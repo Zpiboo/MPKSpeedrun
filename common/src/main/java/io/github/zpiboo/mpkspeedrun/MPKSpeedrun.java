@@ -42,7 +42,7 @@ public class MPKSpeedrun implements MPKModule {
                     "Failed initializing the version compatibility proxy. " +
                     "Version specific features might not work as expected, if at all."
             );
-        EventAPI.addListener(EventAPI.EventListener.onTickEnd(Speedrunner.instance::onTickEnd));
+        EventAPI.addListener(EventAPI.EventListener.onTickStart(Speedrunner.instance::onTickStart));
     }
 
     public void addClassesToClassesTxt(Class<?>[] classes) {
