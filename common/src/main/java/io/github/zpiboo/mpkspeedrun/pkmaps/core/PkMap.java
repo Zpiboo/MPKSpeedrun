@@ -86,7 +86,7 @@ public class PkMap implements Comparable<PkMap> {
             uuid = UUID.fromString(mapJson.optString("uuid"));
         } catch (IllegalArgumentException | NullPointerException e) {
             uuid = UUID.randomUUID();
-            MPKSpeedrun.LOGGER.warn("UUID is either absent or malformatted in parkour map '{}', generated a new one - {}", name, e.getMessage(), e);
+            MPKSpeedrun.LOGGER.warn("UUID is either absent or malformatted in parkour map '" + name + "', generated a new one - " + e.getMessage(), e);
         }
 
         TriggerZone start = TriggerZone.fromJson( mapJson.optJSONObject("start") );

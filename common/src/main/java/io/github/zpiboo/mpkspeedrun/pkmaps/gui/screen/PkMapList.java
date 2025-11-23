@@ -104,7 +104,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
                 try {
                     Files.deleteIfExists(PkMapIO.getFilePath(map));
                 } catch (IOException e) {
-                    MPKSpeedrun.LOGGER.error("Failed to delete map file: {} - {}", PkMapIO.getFilePath(map), e.getMessage(), e);
+                    MPKSpeedrun.LOGGER.error("Failed to delete map file: " + PkMapIO.getFilePath(map) + " - " + e.getMessage(), e);
                 }
                 items.remove(this);
             });

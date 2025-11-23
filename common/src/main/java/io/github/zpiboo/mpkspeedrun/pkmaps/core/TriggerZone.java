@@ -198,13 +198,13 @@ public class TriggerZone {
             triggerMode = TriggerMode.valueOf(triggerModeString);
         } catch (IllegalArgumentException e) {
             triggerMode = TriggerMode.ENTER;
-            MPKSpeedrun.LOGGER.warn("Trigger mode not found: {}", triggerModeString);
+            MPKSpeedrun.LOGGER.warn("Trigger mode not found: " + triggerModeString);
         }
         try {
             posMode = PosMode.valueOf(posModeString);
         } catch (IllegalArgumentException e) {
             posMode = PosMode.POS;
-            MPKSpeedrun.LOGGER.warn("Position mode not found: {}", posModeString);
+            MPKSpeedrun.LOGGER.warn("Position mode not found: " + posModeString);
         }
 
         boolean useLandingPos = boxJson.optBoolean("use_landing_pos", false);

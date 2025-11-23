@@ -45,7 +45,7 @@ public class PkMapIO {
                 try {
                     Files.deleteIfExists(oldPath);
                 } catch (IOException e) {
-                    MPKSpeedrun.LOGGER.error("Failed to delete old file: {} - {}", oldPath, e.getMessage(), e);
+                    MPKSpeedrun.LOGGER.error("Failed to delete old file: " + oldPath + " - " + e.getMessage(), e);
                 }
             }
 
@@ -73,13 +73,12 @@ public class PkMapIO {
             if (fileName.endsWith(".json"))
                 fileName = fileName.substring(0, fileName.length() - 5);
 
-//            loadedMap.setName(fileName);
             loadedMap.setFileName(fileName);
             return loadedMap;
         } catch (IOException e) {
-            MPKSpeedrun.LOGGER.error("Failed to read map file: {} - {}", mapFile.getPath(), e.getMessage(), e);
+            MPKSpeedrun.LOGGER.error("Failed to read map file: " + mapFile.getPath() + " - " + e.getMessage(), e);
         } catch (Exception e) {
-            MPKSpeedrun.LOGGER.error("Invalid JSON format in map file: {} - {}", mapFile.getPath(), e.getMessage(), e);
+            MPKSpeedrun.LOGGER.error("Invalid JSON format in map file: " + mapFile.getPath() + " - " + e.getMessage(), e);
         }
 
         return null;
