@@ -94,11 +94,15 @@ public class Speedrunner {
         boolean isOnGround = currPlayer.isOnGround();
         boolean wasOnGround = prevPlayer.isOnGround();
 
-        if (isMoving && isOnGround) {
-            if (wasMoving)
+        if (isOnGround) {
+            if (isMoving) {
+                if (wasMoving)
+                    runTicks++;
+                if (!wasOnGround || !wasMoving)
+                    runTicks = 0;
+            } else if (wasOnGround && wasMoving) {
                 runTicks++;
-            if (!wasOnGround || !wasMoving)
-                runTicks = 0;
+            }
         }
     }
 
