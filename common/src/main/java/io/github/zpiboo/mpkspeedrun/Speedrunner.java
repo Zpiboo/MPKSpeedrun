@@ -75,13 +75,6 @@ public class Speedrunner {
         Player prevPlayer = currPlayer.getPrevious();
         if (prevPlayer == null) return;
 
-        if (currPlayer.isOnGround()) {
-            if (prevPlayer.isOnGround())
-                groundtime++;
-            else
-                groundtime = 0;
-        }
-
         int inputX = 0, inputY = 0;
         if (KeyBindings.KEY_FORWARD.isKeyDown()) inputY = 1;
         if (KeyBindings.KEY_LEFT.isKeyDown()) inputX = 1;
@@ -95,6 +88,11 @@ public class Speedrunner {
         boolean wasOnGround = prevPlayer.isOnGround();
 
         if (isOnGround) {
+            if (wasOnGround)
+                groundtime++;
+            else
+                groundtime = 0;
+
             if (isMoving) {
                 if (wasMoving)
                     runTicks++;
