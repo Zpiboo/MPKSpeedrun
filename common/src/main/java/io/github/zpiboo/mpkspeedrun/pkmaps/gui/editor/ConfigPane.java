@@ -21,7 +21,7 @@ public class ConfigPane extends Pane<PkMapsGUIScreen> {
     public ConfigPane(PkMap map, Vector2D pos, Vector2D size) {
         super(pos, size);
         this.map = map;
-        backgroundColor = new Color(50, 50, 50, 150);
+        backgroundColor = new Color(50, 50, 50);
 
         double heightUpToHere = 12;
         nameField = new InputField(map.getName(), new Vector2D(0, heightUpToHere), 0.95D)
