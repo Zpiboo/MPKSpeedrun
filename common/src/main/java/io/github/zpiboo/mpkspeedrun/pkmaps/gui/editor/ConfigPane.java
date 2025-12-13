@@ -2,8 +2,10 @@ package io.github.zpiboo.mpkspeedrun.pkmaps.gui.editor;
 
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Renderer2D;
 import io.github.kurrycat.mpkmod.gui.components.Anchor;
+import io.github.kurrycat.mpkmod.gui.components.Button;
 import io.github.kurrycat.mpkmod.gui.components.InputField;
 import io.github.kurrycat.mpkmod.gui.components.Pane;
+import io.github.kurrycat.mpkmod.util.Mouse;
 import io.github.kurrycat.mpkmod.util.Vector2D;
 import io.github.zpiboo.mpkspeedrun.pkmaps.core.PkMap;
 import io.github.zpiboo.mpkspeedrun.pkmaps.gui.screen.PkMapsGUIScreen;
@@ -18,10 +20,12 @@ public class ConfigPane extends Pane<PkMapsGUIScreen> {
     private final TriggerZoneEditor startEditor;
     private final TriggerZoneEditor finishEditor;
 
+    private final Button cancelButton;
+
     public ConfigPane(PkMap map, Vector2D pos, Vector2D size) {
         super(pos, size);
         this.map = map;
-        backgroundColor = new Color(50, 50, 50, 150);
+        backgroundColor = new Color(50, 50, 50);
 
         double heightUpToHere = 12;
         nameField = new InputField(map.getName(), new Vector2D(0, heightUpToHere), 0.95D)
@@ -36,7 +40,12 @@ public class ConfigPane extends Pane<PkMapsGUIScreen> {
         finishEditor = new TriggerZoneEditor(map.getFinish(), "Finish Box:", new Vector2D(0, heightUpToHere), 0.95D);
         addChild(finishEditor, PERCENT.SIZE_X, Anchor.TOP_CENTER);
 
-        heightUpToHere += finishEditor.getDisplayedSize().getY() + 12;
+        heightUpToHere += finishEditor.getDisplayedSize().getY();
+        cancelButton = new Button("Cancel", new Vector2D(0.025D, heightUpToHere), new Vector2D(60, 20));
+        cancelButton.setButtonCallback(mouseButton -> closeWithoutSaving());
+        addChild(cancelButton, PERCENT.POS_X, Anchor.TOP_RIGHT);
+
+        heightUpToHere += cancelButton.getDisplayedSize().getY() + 5;
         size.setY(heightUpToHere);
         setSize(size);
     }
@@ -59,6 +68,10 @@ public class ConfigPane extends Pane<PkMapsGUIScreen> {
     @Override
     public void close() {
         save();
+        super.close();
+    }
+
+    public void closeWithoutSaving() {
         super.close();
     }
 }

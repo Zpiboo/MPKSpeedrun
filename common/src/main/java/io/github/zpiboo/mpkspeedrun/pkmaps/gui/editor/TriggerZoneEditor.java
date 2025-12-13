@@ -1,10 +1,14 @@
 package io.github.zpiboo.mpkspeedrun.pkmaps.gui.editor;
 
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.FontRenderer;
+import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.gui.components.Anchor;
+import io.github.kurrycat.mpkmod.gui.components.Button;
 import io.github.kurrycat.mpkmod.gui.components.CheckButton;
 import io.github.kurrycat.mpkmod.gui.components.Div;
+import io.github.kurrycat.mpkmod.util.BoundingBox3D;
 import io.github.kurrycat.mpkmod.util.Vector2D;
+import io.github.kurrycat.mpkmod.util.Vector3D;
 import io.github.zpiboo.mpkspeedrun.pkmaps.core.TriggerZone;
 import io.github.zpiboo.mpkspeedrun.util.components.ChoiceButton;
 
@@ -15,6 +19,8 @@ public class TriggerZoneEditor extends Div {
 
     private final String label;
 
+    private final Button currentBlockButton;
+    private final Button currentPosButton;
     private final BB3DEditor bbEditor;
     private final ChoiceButton<TriggerZone.TriggerMode> triggerModeChoice;
     private final ChoiceButton<TriggerZone.PosMode> posModeChoice;
@@ -25,11 +31,34 @@ public class TriggerZoneEditor extends Div {
         this.label = label;
 
         double heightUpToHere = 0;
-        if (label != null)
-            heightUpToHere += 16;
+        currentBlockButton = new Button("Set Block Box", new Vector2D(0, heightUpToHere), new Vector2D(0.22D, 11));
+        addChild(currentBlockButton, PERCENT.SIZE_X, Anchor.TOP_RIGHT);
 
+        currentPosButton = new Button("Set Pos Box", new Vector2D(0.26D, heightUpToHere), new Vector2D(0.22D, 11));
+        addChild(currentPosButton, PERCENT.X, Anchor.TOP_RIGHT);
+
+        heightUpToHere += 16;
         bbEditor = new BB3DEditor(triggerZone.getBox(), new Vector2D(0, heightUpToHere), 1.00D);
         addChild(bbEditor, PERCENT.SIZE_X);
+
+        currentBlockButton.setButtonCallback(mouseButton -> {
+            Player player = Player.getLatest();
+            if (player == null) return;
+
+            Vector3D floorPos = player.getPos().floor();
+            BoundingBox3D blockBB = new BoundingBox3D(floorPos, floorPos.add(1));
+
+            bbEditor.setFieldsForBB(blockBB);
+        });
+        currentPosButton.setButtonCallback(mouseButton -> {
+            Player player = Player.getLatest();
+            if (player == null) return;
+
+            Vector3D playerPos = player.getPos();
+            BoundingBox3D posBB = new BoundingBox3D(playerPos, playerPos);
+
+            bbEditor.setFieldsForBB(posBB);
+        });
 
         heightUpToHere += bbEditor.getDisplayedSize().getY() + 5;
         triggerModeChoice = new ChoiceButton<>(TriggerZone.TriggerMode.class, new Vector2D(0, heightUpToHere), new Vector2D(0.48D, 11));
