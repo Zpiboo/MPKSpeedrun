@@ -68,6 +68,17 @@ public class BB3DEditor extends Div {
         return MathUtil.parseDouble(field.content, 0.0D);
     }
 
+    public void setFieldsForBB(BoundingBox3D bb) {
+        for (Axis axis : Axis.values()) {
+            minFields.get(axis).content = String.valueOf(
+                    getVectorCoordByAxis(bb.getMin(), axis)
+            );
+            maxFields.get(axis).content = String.valueOf(
+                    getVectorCoordByAxis(bb.getMax(), axis)
+            );
+        }
+    }
+
     public void save() {
         for (Axis axis : Axis.values()) {
             setVectorCoordByAxis(
