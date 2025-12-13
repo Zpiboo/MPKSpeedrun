@@ -20,6 +20,7 @@ public class TriggerZoneEditor extends Div {
     private final String label;
 
     private final Button currentBlockButton;
+    private final Button currentPosButton;
     private final BB3DEditor bbEditor;
     private final ChoiceButton<TriggerZone.TriggerMode> triggerModeChoice;
     private final ChoiceButton<TriggerZone.PosMode> posModeChoice;
@@ -30,8 +31,11 @@ public class TriggerZoneEditor extends Div {
         this.label = label;
 
         double heightUpToHere = 0;
-        currentBlockButton = new Button("Set Block Box", new Vector2D(0, heightUpToHere), new Vector2D(0.48D, 11));
+        currentBlockButton = new Button("Set Block Box", new Vector2D(0, heightUpToHere), new Vector2D(0.22D, 11));
         addChild(currentBlockButton, PERCENT.SIZE_X, Anchor.TOP_RIGHT);
+
+        currentPosButton = new Button("Set Pos Box", new Vector2D(0.26D, heightUpToHere), new Vector2D(0.22D, 11));
+        addChild(currentPosButton, PERCENT.X, Anchor.TOP_RIGHT);
 
         heightUpToHere += 16;
         bbEditor = new BB3DEditor(triggerZone.getBox(), new Vector2D(0, heightUpToHere), 1.00D);
@@ -45,6 +49,15 @@ public class TriggerZoneEditor extends Div {
             BoundingBox3D blockBB = new BoundingBox3D(floorPos, floorPos.add(1));
 
             bbEditor.setFieldsForBB(blockBB);
+        });
+        currentPosButton.setButtonCallback(mouseButton -> {
+            Player player = Player.getLatest();
+            if (player == null) return;
+
+            Vector3D playerPos = player.getPos();
+            BoundingBox3D posBB = new BoundingBox3D(playerPos, playerPos);
+
+            bbEditor.setFieldsForBB(posBB);
         });
 
         heightUpToHere += bbEditor.getDisplayedSize().getY() + 5;
