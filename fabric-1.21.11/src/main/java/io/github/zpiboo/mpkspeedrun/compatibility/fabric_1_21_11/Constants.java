@@ -1,4 +1,4 @@
-package io.github.zpiboo.mpkspeedrun.compatibility.fabric_1_21_9;
+package io.github.zpiboo.mpkspeedrun.compatibility.fabric_1_21_11;
 
 import net.minecraft.client.MinecraftClient;
 

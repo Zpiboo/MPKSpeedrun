@@ -1,4 +1,4 @@
-package io.github.zpiboo.mpkspeedrun.compatibility.fabric_1_21_9.world;
+package io.github.zpiboo.mpkspeedrun.compatibility.fabric_1_21_11.world;
 
 import io.github.zpiboo.mpkspeedrun.api.world.IBlock;
 

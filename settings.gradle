@@ -20,5 +20,5 @@ include(
     ':common-api',
     ':forge-1.8.9',
     ':forge-1.12.2',
-    ':fabric-1.21.9'
+    ':fabric-1.21.11'
 )
