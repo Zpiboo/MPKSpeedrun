@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    minecraft 'com.mojang:minecraft:1.21.9'
-    mappings 'net.fabricmc:yarn:1.21.9+build.1:v2'
+    minecraft 'com.mojang:minecraft:1.21.11'
+    mappings loom.officialMojangMappings()
 }
