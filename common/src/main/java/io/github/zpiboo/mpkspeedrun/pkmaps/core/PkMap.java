@@ -6,6 +6,7 @@ import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.util.Vector2D;
 import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
 import io.github.zpiboo.mpkspeedrun.pkmaps.gui.editor.ConfigPane;
+import io.github.zpiboo.mpkspeedrun.pkmaps.io.PkMapIO;
 import org.json.JSONObject;
 
 import java.util.UUID;
@@ -95,6 +96,8 @@ public class PkMap implements Comparable<PkMap> {
 
         final PkMap loadedMap = new PkMap(name, start, finish, uuid);
         loadedMap.setStartTime(startTime);
+
+        PkMapIO.save(loadedMap);
         return loadedMap;
     }
 
