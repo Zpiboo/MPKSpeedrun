@@ -6,6 +6,7 @@ import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.util.Vector2D;
 import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
 import io.github.zpiboo.mpkspeedrun.pkmaps.gui.editor.ConfigPane;
+import io.github.zpiboo.mpkspeedrun.pkmaps.gui.screen.PkMapsGUIScreen;
 import io.github.zpiboo.mpkspeedrun.pkmaps.io.PkMapIO;
 import org.json.JSONObject;
 
@@ -120,10 +121,14 @@ public class PkMap implements Comparable<PkMap> {
         return this.uuid.equals(other.uuid);
     }
 
-    public ConfigPane createConfigPane(ComponentHolder parent) {
+    private ConfigPane createConfigPane(ComponentHolder parent) {
         ConfigPane newPane = new ConfigPane(this, Vector2D.ZERO, new Vector2D(3 / 7D, 0));
         parent.passPositionTo(newPane, ComponentHolder.PERCENT.X, Anchor.CENTER);
 
         return newPane;
+    }
+
+    public void openConfigPane(PkMapsGUIScreen parentScreen) {
+        parentScreen.openPane(createConfigPane(parentScreen));
     }
 }
