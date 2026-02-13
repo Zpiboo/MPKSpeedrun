@@ -94,7 +94,7 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
             selectedBtn.setPos(new Vector2D(5, 5));
 
             configPaneBtn = new Button("Config", Vector2D.ZERO, new Vector2D(50, 11), mouseButton -> {
-                ((PkMapsGUIScreen) PkMapList.this.parent).openPane(map.createConfigPane(PkMapList.this.parent));
+                map.openConfigPane((PkMapsGUIScreen) PkMapList.this.parent);
             });
             addChild(configPaneBtn, PERCENT.NONE, Anchor.CENTER_LEFT);
 
