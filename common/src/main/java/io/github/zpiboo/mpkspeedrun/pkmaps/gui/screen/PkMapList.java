@@ -49,6 +49,8 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
             maps.add(newMap);
             PkMapIO.save(newMap);
             updateComponents();
+
+            newMap.openConfigPane((PkMapsGUIScreen) parent);
         });
         bottomCover.setHeight(24, false);
         bottomCover.backgroundColor = null;
