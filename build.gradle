@@ -32,6 +32,10 @@ shadowJar {
     archiveVersion.set(version.toString())
     archiveClassifier.set('shaded')
 
+    manifest {
+        attributes('Implementation-Version': version)
+    }
+
     var config = file("$temporaryDir/mpkmodule.config.json")
     var jsonBuilder = new JsonBuilder()
 
