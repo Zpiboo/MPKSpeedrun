@@ -2,10 +2,8 @@ package io.github.zpiboo.mpkspeedrun.pkmaps.gui.screen;
 
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.FontRenderer;
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Renderer2D;
-import io.github.kurrycat.mpkmod.gui.components.Anchor;
+import io.github.kurrycat.mpkmod.gui.components.*;
 import io.github.kurrycat.mpkmod.gui.components.Button;
-import io.github.kurrycat.mpkmod.gui.components.ScrollableList;
-import io.github.kurrycat.mpkmod.gui.components.ScrollableListItem;
 import io.github.kurrycat.mpkmod.util.Mouse;
 import io.github.kurrycat.mpkmod.util.Vector2D;
 import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
@@ -33,6 +31,16 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
         this.maps = maps;
 
         radioGroup = new RadioButtonGroup();
+
+        if (!MPKSpeedrun.isUpToDate()) {
+            UpdatePane updatePane = new UpdatePane();
+            passPositionTo(updatePane, PERCENT.NONE, Anchor.CENTER);
+
+            Button updateAvailable = new Button("Update available", btn -> ((PkMapsGUIScreen) parent).openPane(updatePane));
+            updateAvailable.setPos(new Vector2D(10, 0));
+            updateAvailable.setHeight(17, false);
+            topCover.addChild(updateAvailable, PERCENT.NONE, Anchor.CENTER_LEFT);
+        }
 
         setPos(pos);
         setSize(size);
@@ -135,6 +143,42 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
             configPaneBtn.render(mouse);
 
             deleteBtn.render(mouse);
+        }
+    }
+
+    private static class UpdatePane extends Pane<PkMapsGUIScreen> {
+        public UpdatePane() {
+            super(Vector2D.ZERO, new Vector2D(300, 50));
+        }
+
+        @Override
+        public void render(Vector2D mousePos) {
+            super.render(mousePos);
+            double middle = getDisplayedSize().getX() / 2;
+
+            double heightUpToHere = 16;
+            FontRenderer.drawCenteredString(
+                    "A new version of MPKSpeedrun is available!",
+                    new Vector2D(getDisplayedPos().getX() + middle, getDisplayedPos().getY() + heightUpToHere),
+                    Color.WHITE,
+                    false
+            );
+            heightUpToHere += 9;
+
+            FontRenderer.drawCenteredString(
+                    "Check out this link to download it:",
+                    new Vector2D(getDisplayedPos().getX() + middle, getDisplayedPos().getY() + heightUpToHere),
+                    Color.WHITE,
+                    false
+            );
+            heightUpToHere += 9;
+
+            FontRenderer.drawCenteredString(
+                    "https://github.com/Zpiboo/MPKSpeedrun/releases",
+                    new Vector2D(getDisplayedPos().getX() + middle, getDisplayedPos().getY() + heightUpToHere),
+                    Color.WHITE,
+                    false
+            );
         }
     }
 }
