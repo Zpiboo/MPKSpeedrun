@@ -1,67 +1,48 @@
+import groovy.json.JsonBuilder
+
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '8.3.6'
+}
+
 group = 'io.github.zpiboo.mpkspeedrun'
 version = '1.0.0-SNAPSHOT'
 
-tasks.register('buildAll', Jar) {
-    description = 'Builds and merges all modules.'
-    group = 'build'
+var mainClassPath = 'io.github.zpiboo.mpkspeedrun.MPKSpeedrun'
 
-    archiveBaseName.set('mpkspeedrun')
-    archiveVersion.set(version.toString())
-
-    subprojects.collect() {
-        def jarTask = it.tasks.named(it.ext.has('jarTaskName') ? it.ext.get('jarTaskName') : 'jar')
-        dependsOn jarTask
-
-        from zipTree(jarTask.get().archiveFile)
-    }
-
-    destinationDirectory.set(layout.buildDirectory.dir('libs'))
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
-subprojects { Project p ->
-    apply plugin: 'java'
+dependencies {
+    implementation 'org.json:json:20240303'
+    compileOnly 'org.apache.logging.log4j:log4j-api:2.24.1'
+    compileOnly 'org.apache.logging.log4j:log4j-core:2.24.1'
 
-    tasks.withType(JavaCompile).configureEach {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
-        options.encoding = 'UTF-8'
-    }
+    compileOnly 'com.github.MPKMod:MPKMod2:-SNAPSHOT'
+}
 
-    repositories {
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
-    }
+configurations {
+    shaded { extendsFrom implementation }
+}
 
-    dependencies {
-        compileOnly 'com.github.MPKMod:MPKMod2:-SNAPSHOT'
+shadowJar {
+    archiveBaseName.set('mpkspeedrun')
+    archiveVersion.set(version.toString())
+    archiveClassifier.set('shaded')
 
-        if (p.name.startsWith('forge') || p.name.startsWith('fabric')) {
-            implementation project(':common-api')
-            implementation project(':common')
-        }
-    }
+    var config = file("$temporaryDir/mpkmodule.config.json")
+    var jsonBuilder = new JsonBuilder()
 
-    p.afterEvaluate {
-        if (p.name.startsWith('fabric')) {
-            p.ext.jarTaskName = 'remapJar'
+    jsonBuilder (
+            moduleName: 'mpkspeedrun',
+            mainClass: mainClassPath
+    )
 
-            p.tasks.named(p.ext.jarTaskName) {
-                dependsOn p.jar
+    config.text = jsonBuilder.toPrettyString()
+    from config
 
-                archiveClassifier.set('remapped')
-                destinationDirectory.set(layout.buildDirectory.dir('remappedJar'))
-
-                inputFile.set(p.jar.archiveFile)
-            }
-        } else if (p.name.startsWith('forge')) {
-            p.ext.jarTaskName = 'remapForgeJar'
-
-            p.tasks.named(p.ext.jarTaskName) {
-                dependsOn p.tasks.named('forgeJar')
-
-                archiveClassifier.set('remapped')
-                destinationDirectory.set(layout.buildDirectory.dir('remappedJar'))
-            }
-        }
-    }
+    mergeServiceFiles()
+    configurations = [project.configurations.shaded]
 }
