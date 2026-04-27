@@ -20,6 +20,7 @@ import java.util.Set;
 public class MPKSpeedrun implements MPKModule {
     public static final String MODULE_NAME = "mpkspeedrun";
     public static final Logger LOGGER = LogManager.getLogger(MODULE_NAME);
+    public static final String MODULE_VERSION = MPKSpeedrun.class.getPackage().getImplementationVersion();
 
     public void init() {
         addClassesToClassesTxt(new Class[] {
