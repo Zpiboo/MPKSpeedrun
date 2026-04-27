@@ -74,6 +74,8 @@ public class PkMapIO {
                 fileName = fileName.substring(0, fileName.length() - 5);
 
             loadedMap.setFileName(fileName);
+            PkMapIO.save(loadedMap);
+
             return loadedMap;
         } catch (IOException e) {
             MPKSpeedrun.LOGGER.error("Failed to read map file: " + mapFile.getPath() + " - " + e.getMessage(), e);

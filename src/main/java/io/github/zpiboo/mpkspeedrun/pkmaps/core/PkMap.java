@@ -98,7 +98,6 @@ public class PkMap implements Comparable<PkMap> {
         final PkMap loadedMap = new PkMap(name, start, finish, uuid);
         loadedMap.setStartTime(startTime);
 
-        PkMapIO.save(loadedMap);
         return loadedMap;
     }
 
