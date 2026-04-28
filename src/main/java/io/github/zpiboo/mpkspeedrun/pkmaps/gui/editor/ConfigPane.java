@@ -21,6 +21,7 @@ public class ConfigPane extends Pane<PkMapsGUIScreen> {
     private final TriggerZoneEditor finishEditor;
 
     private final Button cancelButton;
+    private final Button doneButton;
 
     public ConfigPane(PkMap map, Vector2D pos, Vector2D size) {
         super(pos, size);
@@ -40,10 +41,14 @@ public class ConfigPane extends Pane<PkMapsGUIScreen> {
         finishEditor = new TriggerZoneEditor(map.getFinish(), "Finish Box:", new Vector2D(0, heightUpToHere), 0.95D);
         addChild(finishEditor, PERCENT.SIZE_X, Anchor.TOP_CENTER);
 
-        heightUpToHere += finishEditor.getDisplayedSize().getY();
-        cancelButton = new Button("Cancel", new Vector2D(0.025D, heightUpToHere), new Vector2D(60, 20));
+        heightUpToHere += finishEditor.getDisplayedSize().getY() + 10;
+        doneButton = new Button("Done", new Vector2D(20, heightUpToHere), new Vector2D(50, 20));
+        doneButton.setButtonCallback(mouseButton -> saveAndClose());
+        addChild(doneButton, PERCENT.NONE, Anchor.TOP_RIGHT);
+
+        cancelButton = new Button("Cancel", new Vector2D(70, heightUpToHere), new Vector2D(60, 20));
         cancelButton.setButtonCallback(mouseButton -> closeWithoutSaving());
-        addChild(cancelButton, PERCENT.POS_X, Anchor.TOP_RIGHT);
+        addChild(cancelButton, PERCENT.NONE, Anchor.TOP_RIGHT);
 
         heightUpToHere += cancelButton.getDisplayedSize().getY() + 5;
         size.setY(heightUpToHere);
@@ -67,6 +72,10 @@ public class ConfigPane extends Pane<PkMapsGUIScreen> {
 
     @Override
     public void close() {
+        saveAndClose();
+    }
+
+    public void saveAndClose() {
         save();
         super.close();
     }
