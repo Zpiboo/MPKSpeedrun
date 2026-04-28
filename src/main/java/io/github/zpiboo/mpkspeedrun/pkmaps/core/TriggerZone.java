@@ -18,7 +18,7 @@ public class TriggerZone {
     private boolean useLandingPos;
 
     public boolean shouldTrigger = false;
-    private int lastAirtime = 0;
+    private int lastTickIndicator = 0;
     private double lastSubtick = 0.0D;
 
     @SuppressWarnings("unused") public static final TriggerZone ZERO = new TriggerZone();
@@ -74,11 +74,11 @@ public class TriggerZone {
     }
 
     @InfoString.Getter
-    public int getAirtime() {
-        return lastAirtime;
+    public int getTickIndicator() {
+        return lastTickIndicator;
     }
-    public void setAirtime(int airtime) {
-        lastAirtime = airtime;
+    public void setTickIndicator(int tickIndicator) {
+        lastTickIndicator = tickIndicator;
     }
 
     @InfoString.Getter
@@ -159,12 +159,15 @@ public class TriggerZone {
         shouldTrigger = shouldTrigger(player);
 
         if (shouldTrigger) {
-            setAirtime(player.getAirtime());
             setSubtick(calculateSubtick(player));
+            onTrigger(player);
         }
 
         return shouldTrigger;
     }
+
+    protected void onTrigger(Player player) {}
+
 
     public JSONObject toJson() {
         return new JSONObject()
@@ -233,5 +236,9 @@ public class TriggerZone {
         this.setTriggerMode(triggerMode);
         this.setPosMode(posMode);
         this.setUsingLandingPos(useLandingPos);
+    }
+
+    protected enum TriggerState {
+        GROUNDED, AIRBORNE, NONE
     }
 }
