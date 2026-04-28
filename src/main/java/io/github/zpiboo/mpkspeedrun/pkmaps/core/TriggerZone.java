@@ -180,6 +180,13 @@ public class TriggerZone {
                 .put("maxz", box.maxZ());
     }
     public static TriggerZone fromJson(JSONObject boxJson) {
+        TriggerZone newZone = new TriggerZone();
+        newZone.applyJson(boxJson);
+
+        return newZone;
+    }
+
+    protected void applyJson(JSONObject boxJson) {
         String legacyModeString = boxJson.optString("mode");  // TODO: remove this for the first release (v1.0.0!!!) (after beta test)
 
         String triggerModeString = boxJson.optString("trigger_on");
@@ -221,6 +228,9 @@ public class TriggerZone {
                 new Vector3D(maxX, maxY, maxZ)
         );
 
-        return new TriggerZone(box, triggerMode, posMode, useLandingPos);
+        this.setBox(box);
+        this.setTriggerMode(triggerMode);
+        this.setPosMode(posMode);
+        this.setUsingLandingPos(useLandingPos);
     }
 }
