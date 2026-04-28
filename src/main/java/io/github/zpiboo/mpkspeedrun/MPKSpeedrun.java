@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -21,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Set;
 
@@ -77,10 +79,8 @@ public class MPKSpeedrun implements MPKModule {
 
         String json;
         try (InputStream in = url.openStream()) {
-            json = new String(in.readAllBytes());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+            json = new String(readAll(in), StandardCharsets.UTF_8);
+        } catch (IOException ignore) { return; }
 
         String remoteVersion = new JSONArray(json).getJSONObject(0).getString("tag_name");
         int compareVersions = compareVersions(MODULE_VERSION, remoteVersion);
@@ -90,6 +90,17 @@ public class MPKSpeedrun implements MPKModule {
         } else if (compareVersions < 0) {
             upToDate = false;
         }
+    }
+
+
+    private static byte[] readAll(InputStream in) throws IOException {
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        byte[] data = new byte[8192];
+        int n;
+        while ((n = in.read(data)) != -1) {
+            buffer.write(data, 0, n);
+        }
+        return buffer.toByteArray();
     }
 
     private static int compareVersions(String a, String b) {
