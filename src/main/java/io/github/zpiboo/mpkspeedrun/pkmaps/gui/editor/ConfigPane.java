@@ -46,7 +46,7 @@ public class ConfigPane extends Pane<PkMapsGUIScreen> {
         doneButton.setButtonCallback(mouseButton -> saveAndClose());
         addChild(doneButton, PERCENT.NONE, Anchor.TOP_RIGHT);
 
-        cancelButton = new Button("Cancel", new Vector2D(70, heightUpToHere), new Vector2D(60, 20));
+        cancelButton = new Button("Cancel", new Vector2D(90, heightUpToHere), new Vector2D(60, 20));
         cancelButton.setButtonCallback(mouseButton -> closeWithoutSaving());
         addChild(cancelButton, PERCENT.NONE, Anchor.TOP_RIGHT);
 
