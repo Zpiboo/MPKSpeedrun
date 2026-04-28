@@ -81,6 +81,7 @@ public class TriggerZone {
         lastAirtime = airtime;
     }
 
+    @InfoString.Getter
     public double getSubtick() {
         return lastSubtick;
     }
