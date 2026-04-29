@@ -142,7 +142,7 @@ public class PkMap implements Comparable<PkMap> {
         if (timer.isEnabled())
             timedTick(p, s);
 
-        if (start.shouldTrigger()) {
+        if (start.didTrigger()) {
             timer.setTimeInTicks(getStartTime());
             timer.setSubtick(-start.getSubtick());
             timer.setEnabled(true);
@@ -152,7 +152,7 @@ public class PkMap implements Comparable<PkMap> {
     private void timedTick(Player p, Speedrunner s) {
         Timer timer = s.getTimer();
 
-        if (finish.shouldTrigger()) {
+        if (finish.didTrigger()) {
             timer.setEnabled(false);
             timer.setSubtick(timer.getSubtick() + finish.getSubtick());
         } else {

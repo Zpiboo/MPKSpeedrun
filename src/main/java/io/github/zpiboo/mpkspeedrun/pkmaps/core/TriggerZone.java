@@ -17,7 +17,7 @@ public class TriggerZone {
     private PosMode posMode;
     private boolean useLandingPos;
 
-    private boolean shouldTrigger = false;
+    private boolean didTrigger = false;
     private int lastTickIndicator = 0;
     private double lastSubtick = 0.0D;
 
@@ -73,8 +73,8 @@ public class TriggerZone {
         this.useLandingPos = useLandingPos;
     }
 
-    public boolean shouldTrigger() {
-        return shouldTrigger;
+    public boolean didTrigger() {
+        return didTrigger;
     }
     @InfoString.Getter
     public int getTickIndicator() {
@@ -159,14 +159,14 @@ public class TriggerZone {
     }
 
     public boolean tick(Player p) {
-        shouldTrigger = shouldTrigger(p);
+        didTrigger = shouldTrigger(p);
 
-        if (shouldTrigger) {
+        if (didTrigger) {
             setSubtick(calculateSubtick(p));
             onTrigger(p);
         }
 
-        return shouldTrigger;
+        return didTrigger;
     }
 
     protected void onTrigger(Player p) {}
