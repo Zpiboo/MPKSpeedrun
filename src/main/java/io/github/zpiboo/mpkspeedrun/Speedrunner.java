@@ -33,8 +33,9 @@ public class Speedrunner {
     }
 
     @InfoString.Getter
-    public TriggerZone getLastTriggerZone() {
-        return lastTriggerZone;
+    public TriggerZone.TriggerData getLastTrigger() {
+        if (lastTriggerZone == null) return null;
+        return lastTriggerZone.getLastTrigger();
     }
     public void setLastTriggerZone(TriggerZone triggerZone) {
         this.lastTriggerZone = triggerZone;
