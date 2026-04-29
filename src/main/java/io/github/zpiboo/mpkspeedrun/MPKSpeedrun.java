@@ -38,7 +38,7 @@ public class MPKSpeedrun implements MPKModule {
 
         addClassesToClassesTxt(new Class[] {
                 Speedrunner.class,
-                Speedrunner.Timer.class,
+                Timer.class,
                 PkMap.class,
                 TriggerZone.class
         });

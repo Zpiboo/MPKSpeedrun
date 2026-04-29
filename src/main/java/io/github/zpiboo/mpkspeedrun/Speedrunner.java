@@ -3,8 +3,6 @@ package io.github.zpiboo.mpkspeedrun;
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.events.OnTickStartEvent;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
-import io.github.kurrycat.mpkmod.util.FormatDecimals;
-import io.github.kurrycat.mpkmod.util.MathUtil;
 import io.github.zpiboo.mpkspeedrun.pkmaps.core.PkMap;
 import io.github.zpiboo.mpkspeedrun.util.misc.KeyBindings;
 
@@ -53,24 +51,7 @@ public class Speedrunner {
         if (currPlayer == null) return;
 
         final PkMap pkMap = getCurrentMap();
-        if (pkMap != null) {
-            if (timer.isEnabled()) {
-                boolean shouldFinishMap = pkMap.getFinish().tick(currPlayer);
-                if (shouldFinishMap) {
-                    timer.setEnabled(false);
-                    timer.setSubtick(timer.getSubtick() + getCurrentMap().getFinish().getSubtick());
-                } else {
-                    timer.increment();
-                }
-            }
-
-            boolean shouldStartMap = pkMap.getStart().tick(currPlayer);
-            if (shouldStartMap) {
-                timer.setTimeInTicks(getCurrentMap().getStartTime());
-                timer.setSubtick(-getCurrentMap().getStart().getSubtick());
-                timer.setEnabled(true);
-            }
-        }
+        if (pkMap != null) pkMap.tick(currPlayer, this);
 
         Player prevPlayer = currPlayer.getPrevious();
         if (prevPlayer == null) return;
@@ -100,66 +81,6 @@ public class Speedrunner {
                     runTicks = 0;
             } else if (wasOnGround && wasMoving) {
                 runTicks++;
-            }
-        }
-    }
-
-    @InfoString.DataClass
-    public static class Timer implements FormatDecimals {
-        private int timeInTicks = 0;
-        private double subtick = 0.0D;
-        private final SubtickTimerFormat subtickTimer = new SubtickTimerFormat();
-        private boolean enabled = false;
-
-        @InfoString.Getter
-        public int getTimeInTicks() {
-            return timeInTicks;
-        }
-        public void setTimeInTicks(int timeInTicks) {
-            this.timeInTicks = timeInTicks;
-        }
-
-        @InfoString.Getter
-        public double getSubtick() {
-            return subtick;
-        }
-        public void setSubtick(double subtick) {
-            this.subtick = subtick;
-        }
-
-        public boolean isEnabled() {
-            return enabled;
-        }
-        public void setEnabled(boolean enabled) {
-            this.enabled = enabled;
-        }
-
-        public void reset() {
-            setTimeInTicks(0);
-            setSubtick(0.0D);
-        }
-        public void increment() {
-            setTimeInTicks(getTimeInTicks() + 1);
-        }
-
-        @Override
-        public String formatDecimals(int decimals, boolean keepZeros) {
-            return MathUtil.formatDecimals((double) getTimeInTicks() / 20, decimals, keepZeros) + "s";
-        }
-
-        @InfoString.Getter
-        public SubtickTimerFormat getWithSubtick() {
-            return subtickTimer;
-        }
-
-        public class SubtickTimerFormat implements FormatDecimals {
-            @Override
-            public String formatDecimals(int decimals, boolean keepZeros) {
-                return MathUtil.formatDecimals(
-                        (double) getTimeInTicks() / 20 + subtick * 0.05D,
-                        decimals,
-                        keepZeros
-                ) + "s";
             }
         }
     }

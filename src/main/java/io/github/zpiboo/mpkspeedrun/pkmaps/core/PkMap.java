@@ -1,13 +1,15 @@
 package io.github.zpiboo.mpkspeedrun.pkmaps.core;
 
+import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.gui.components.Anchor;
 import io.github.kurrycat.mpkmod.gui.components.ComponentHolder;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.util.Vector2D;
 import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
+import io.github.zpiboo.mpkspeedrun.Speedrunner;
+import io.github.zpiboo.mpkspeedrun.Timer;
 import io.github.zpiboo.mpkspeedrun.pkmaps.gui.editor.ConfigPane;
 import io.github.zpiboo.mpkspeedrun.pkmaps.gui.screen.PkMapsGUIScreen;
-import io.github.zpiboo.mpkspeedrun.pkmaps.io.PkMapIO;
 import org.json.JSONObject;
 
 import java.util.UUID;
@@ -20,12 +22,12 @@ public class PkMap implements Comparable<PkMap> {
     private final UUID uuid;
     private String name;
 
-    private TriggerZone start;
-    private TriggerZone finish;
+    private StartZone start;
+    private FinishZone finish;
 
     private int startTime = 1;
 
-    public PkMap(String name, TriggerZone start, TriggerZone finish, UUID uuid) {
+    public PkMap(String name, StartZone start, FinishZone finish, UUID uuid) {
         if (uuid == null)
             this.uuid = UUID.randomUUID();
         else
@@ -60,7 +62,7 @@ public class PkMap implements Comparable<PkMap> {
     public TriggerZone getStart() {
         return start;
     }
-    public void setStart(TriggerZone start) {
+    public void setStart(StartZone start) {
         this.start = start;
     }
 
@@ -68,7 +70,7 @@ public class PkMap implements Comparable<PkMap> {
     public TriggerZone getFinish() {
         return finish;
     }
-    public void setFinish(TriggerZone finish) {
+    public void setFinish(FinishZone finish) {
         this.finish = finish;
     }
 
@@ -91,8 +93,8 @@ public class PkMap implements Comparable<PkMap> {
             MPKSpeedrun.LOGGER.warn("UUID is either absent or malformatted in parkour map '" + name + "', generated a new one - " + e.getMessage(), e);
         }
 
-        TriggerZone start = TriggerZone.fromJson( mapJson.optJSONObject("start") );
-        TriggerZone finish = TriggerZone.fromJson( mapJson.optJSONObject("finish") );
+        StartZone start = StartZone.fromJson( mapJson.optJSONObject("start") );
+        FinishZone finish = FinishZone.fromJson( mapJson.optJSONObject("finish") );
         int startTime = mapJson.optInt("start_time", 1);
 
         final PkMap loadedMap = new PkMap(name, start, finish, uuid);
@@ -129,5 +131,32 @@ public class PkMap implements Comparable<PkMap> {
 
     public void openConfigPane(PkMapsGUIScreen parentScreen) {
         parentScreen.openPane(createConfigPane(parentScreen));
+    }
+
+    public void tick(Player p, Speedrunner s) {
+        start.tick(p);
+        finish.tick(p);
+
+        Timer timer = s.getTimer();
+
+        if (timer.isEnabled())
+            timedTick(p, s);
+
+        if (start.didTrigger()) {
+            timer.setTimeInTicks(getStartTime());
+            timer.setSubtick(-start.getSubtick());
+            timer.setEnabled(true);
+        }
+    }
+
+    private void timedTick(Player p, Speedrunner s) {
+        Timer timer = s.getTimer();
+
+        if (finish.didTrigger()) {
+            timer.setEnabled(false);
+            timer.setSubtick(timer.getSubtick() + finish.getSubtick());
+        } else {
+            timer.increment();
+        }
     }
 }

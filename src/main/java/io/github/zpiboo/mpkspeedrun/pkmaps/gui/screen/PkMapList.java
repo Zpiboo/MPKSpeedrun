@@ -8,7 +8,9 @@ import io.github.kurrycat.mpkmod.util.Mouse;
 import io.github.kurrycat.mpkmod.util.Vector2D;
 import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
 import io.github.zpiboo.mpkspeedrun.Speedrunner;
+import io.github.zpiboo.mpkspeedrun.pkmaps.core.FinishZone;
 import io.github.zpiboo.mpkspeedrun.pkmaps.core.PkMap;
+import io.github.zpiboo.mpkspeedrun.pkmaps.core.StartZone;
 import io.github.zpiboo.mpkspeedrun.pkmaps.core.TriggerZone;
 import io.github.zpiboo.mpkspeedrun.pkmaps.io.PkMapIO;
 import io.github.zpiboo.mpkspeedrun.util.components.RadioButton;
@@ -50,8 +52,8 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
             if (mouseButton != Mouse.Button.LEFT) return;
             PkMap newMap = new PkMap(
                 PkMap.DEFAULT_NAME,
-                new TriggerZone(),
-                new TriggerZone(),
+                new StartZone(),
+                new FinishZone(),
                 null
             );
             maps.add(newMap);
