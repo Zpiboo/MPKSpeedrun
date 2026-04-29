@@ -160,6 +160,11 @@ public class TriggerZone {
         s.setLastTriggerZone(this);
 
         lastTrigger.setSubtick(calculateSubtick(p));
+
+        double currOffset = getBox().distanceTo(p.getBoundingBox()).mult(-1).length();
+        double prevOffset = getBox().distanceTo(p.getPrevious().getBoundingBox()).mult(-1).length();
+        lastTrigger.setMadeByOffset(currOffset);
+        lastTrigger.setMissedByOffset(prevOffset);
     }
 
 
@@ -240,6 +245,8 @@ public class TriggerZone {
     public static class TriggerData {
         private int tickIndicator = 0;
         private double subtick = 0.0D;
+        private double madeByOffset = 0.0D;
+        private double missedByOffset = 0.0D;
 
         @InfoString.Getter
         public int getTickIndicator() {
@@ -255,6 +262,22 @@ public class TriggerZone {
         }
         public void setSubtick(double subtick) {
             this.subtick = subtick;
+        }
+
+        @InfoString.Getter
+        public double getMadeByOffset() {
+            return madeByOffset;
+        }
+        public void setMadeByOffset(double offset) {
+            this.madeByOffset = offset;
+        }
+
+        @InfoString.Getter
+        public double getMissedByOffset() {
+            return missedByOffset;
+        }
+        public void setMissedByOffset(double offset) {
+            this.missedByOffset = offset;
         }
     }
 }
