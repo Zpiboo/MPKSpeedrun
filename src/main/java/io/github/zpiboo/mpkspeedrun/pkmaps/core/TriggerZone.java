@@ -3,11 +3,13 @@ package io.github.zpiboo.mpkspeedrun.pkmaps.core;
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.util.BoundingBox3D;
+import io.github.kurrycat.mpkmod.util.Vector2D;
 import io.github.kurrycat.mpkmod.util.Vector3D;
 import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
 import io.github.zpiboo.mpkspeedrun.Speedrunner;
 import io.github.zpiboo.mpkspeedrun.util.api_compat.BoundingBox3DUtil;
 import io.github.zpiboo.mpkspeedrun.util.api_compat.PlayerUtil;
+import io.github.zpiboo.mpkspeedrun.util.api_compat.Vector3DUtil;
 import io.github.zpiboo.mpkspeedrun.util.misc.ChoiceEnum;
 import org.json.JSONObject;
 
@@ -161,10 +163,27 @@ public class TriggerZone {
 
         lastTrigger.setSubtick(calculateSubtick(p));
 
-        double currOffset = getBox().distanceTo(p.getBoundingBox()).mult(-1).length();
-        double prevOffset = getBox().distanceTo(p.getPrevious().getBoundingBox()).mult(-1).length();
+        double currOffset = calculateOffset(p);
+        double prevOffset = calculateOffset(p.getPrevious());
         lastTrigger.setMadeByOffset(currOffset);
         lastTrigger.setMissedByOffset(prevOffset);
+    }
+
+    protected double calculateOffset(Player p) {
+        BoundingBox3D bb;
+        switch (getPosMode()) {
+            case BOX:
+                bb = getAdaptedBB(p);
+                break;
+
+            case POS:
+            default:
+                Vector3D pos = getAdaptedPos(p);
+                bb = new BoundingBox3D(pos, pos);
+                break;
+        }
+        Vector3D offset3d = getBox().distanceTo(bb).mult(-1);
+        return Vector3DUtil.xzOffset(offset3d);
     }
 
 
