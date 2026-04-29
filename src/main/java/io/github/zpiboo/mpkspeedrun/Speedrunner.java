@@ -4,6 +4,7 @@ import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.events.OnTickStartEvent;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.zpiboo.mpkspeedrun.pkmaps.core.PkMap;
+import io.github.zpiboo.mpkspeedrun.pkmaps.core.TriggerZone;
 import io.github.zpiboo.mpkspeedrun.util.misc.KeyBindings;
 
 public class Speedrunner {
@@ -12,6 +13,8 @@ public class Speedrunner {
 
     private int groundtime = 0;
     private int runTicks = 0;
+
+    private TriggerZone lastTriggerZone = null;
 
     private boolean isMoving = false;
 
@@ -27,6 +30,14 @@ public class Speedrunner {
     @InfoString.Getter
     public int getRunTicks() {
         return runTicks;
+    }
+
+    @InfoString.Getter
+    public TriggerZone getLastTriggerZone() {
+        return lastTriggerZone;
+    }
+    public void setLastTriggerZone(TriggerZone triggerZone) {
+        this.lastTriggerZone = triggerZone;
     }
 
     @InfoString.Getter

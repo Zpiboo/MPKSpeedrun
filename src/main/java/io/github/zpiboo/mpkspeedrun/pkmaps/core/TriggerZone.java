@@ -5,6 +5,7 @@ import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.util.BoundingBox3D;
 import io.github.kurrycat.mpkmod.util.Vector3D;
 import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
+import io.github.zpiboo.mpkspeedrun.Speedrunner;
 import io.github.zpiboo.mpkspeedrun.util.api_compat.BoundingBox3DUtil;
 import io.github.zpiboo.mpkspeedrun.util.api_compat.PlayerUtil;
 import io.github.zpiboo.mpkspeedrun.util.misc.ChoiceEnum;
@@ -158,18 +159,20 @@ public class TriggerZone {
         }
     }
 
-    public boolean tick(Player p) {
+    public boolean tick(Player p, Speedrunner s) {
         didTrigger = shouldTrigger(p);
 
         if (didTrigger) {
             setSubtick(calculateSubtick(p));
-            onTrigger(p);
+            onTrigger(p, s);
         }
 
         return didTrigger;
     }
 
-    protected void onTrigger(Player p) {}
+    protected void onTrigger(Player p, Speedrunner s) {
+        s.setLastTriggerZone(this);
+    }
 
 
     public JSONObject toJson() {

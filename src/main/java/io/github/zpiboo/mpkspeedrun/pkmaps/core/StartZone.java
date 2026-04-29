@@ -2,6 +2,7 @@ package io.github.zpiboo.mpkspeedrun.pkmaps.core;
 
 import io.github.kurrycat.mpkmod.compatibility.API;
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
+import io.github.zpiboo.mpkspeedrun.Speedrunner;
 import org.json.JSONObject;
 
 public class StartZone extends TriggerZone {
@@ -9,8 +10,8 @@ public class StartZone extends TriggerZone {
     private long lastTriggerTime = -1;
 
     @Override
-    public boolean tick(Player p) {
-        boolean shouldTrigger = super.tick(p);
+    public boolean tick(Player p, Speedrunner s) {
+        boolean shouldTrigger = super.tick(p, s);
 
         if (lastTriggerState == TriggerState.GROUNDED) {
             if (!p.isOnGround()) {
@@ -29,8 +30,8 @@ public class StartZone extends TriggerZone {
     }
 
     @Override
-    protected void onTrigger(Player p) {
-        super.onTrigger(p);
+    protected void onTrigger(Player p, Speedrunner s) {
+        super.onTrigger(p, s);
 
         lastTriggerState = p.isOnGround()
                 ? TriggerState.GROUNDED
