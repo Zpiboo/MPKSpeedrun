@@ -3,7 +3,6 @@ package io.github.zpiboo.mpkspeedrun.pkmaps.core;
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.util.BoundingBox3D;
-import io.github.kurrycat.mpkmod.util.Vector2D;
 import io.github.kurrycat.mpkmod.util.Vector3D;
 import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
 import io.github.zpiboo.mpkspeedrun.Speedrunner;
@@ -159,7 +158,7 @@ public class TriggerZone {
     }
 
     protected void onTrigger(Player p, Speedrunner s) {
-        s.setLastTriggerZone(this);
+        s.setLastTrigger(this.lastTrigger);
 
         lastTrigger.setSubtick(calculateSubtick(p));
 

@@ -14,7 +14,7 @@ public class Speedrunner {
     private int groundtime = 0;
     private int runTicks = 0;
 
-    private TriggerZone lastTriggerZone = null;
+    private TriggerZone.TriggerData lastTrigger = new TriggerZone.TriggerData();
 
     private boolean isMoving = false;
 
@@ -34,11 +34,10 @@ public class Speedrunner {
 
     @InfoString.Getter
     public TriggerZone.TriggerData getLastTrigger() {
-        if (lastTriggerZone == null) return null;
-        return lastTriggerZone.getLastTrigger();
+        return lastTrigger;
     }
-    public void setLastTriggerZone(TriggerZone triggerZone) {
-        this.lastTriggerZone = triggerZone;
+    public void setLastTrigger(TriggerZone.TriggerData lastTrigger) {
+        this.lastTrigger = lastTrigger;
     }
 
     @InfoString.Getter
