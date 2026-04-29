@@ -37,7 +37,9 @@ public class Speedrunner {
 
     @InfoString.Getter
     public PkMap getCurrentMap() {
-        return currentMap;
+        return currentMap != null
+                ? currentMap
+                : PkMap.NONE;
     }
     public void setCurrentMap(PkMap map) {
         currentMap = map;

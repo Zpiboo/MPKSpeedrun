@@ -16,6 +16,7 @@ import java.util.UUID;
 
 @InfoString.DataClass
 public class PkMap implements Comparable<PkMap> {
+    public static final PkMap NONE = new DummyMap();
     public static final String DEFAULT_NAME = "New Map";
 
     private String fileName;
@@ -33,9 +34,9 @@ public class PkMap implements Comparable<PkMap> {
         else
             this.uuid = uuid;
 
-        setName(name);
-        setStart(start);
-        setFinish(finish);
+        this.name = name;
+        this.start = start;
+        this.finish = finish;
     }
 
     public String getFileName() {
@@ -158,5 +159,24 @@ public class PkMap implements Comparable<PkMap> {
         } else {
             timer.increment();
         }
+    }
+
+    private static final class DummyMap extends PkMap {
+        private DummyMap() {
+            super(
+                    "None",
+                    new StartZone(),
+                    new FinishZone(),
+                    new UUID(0L, 0L)
+            );
+        }
+
+        @Override public void tick(Player p, Speedrunner s) {}
+
+        @Override public void setFileName(String fileName) {}
+        @Override public void setName(String name) {}
+        @Override public void setStart(StartZone start) {}
+        @Override public void setFinish(FinishZone finish) {}
+        @Override public void setStartTime(int startTime) {}
     }
 }
