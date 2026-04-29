@@ -136,7 +136,6 @@ public class PkMap implements Comparable<PkMap> {
 
     public void tick(Player p, Speedrunner s) {
         start.tick(p, s);
-        finish.tick(p, s);
 
         Timer timer = s.getTimer();
 
@@ -151,6 +150,7 @@ public class PkMap implements Comparable<PkMap> {
     }
 
     private void timedTick(Player p, Speedrunner s) {
+        finish.tick(p, s);
         Timer timer = s.getTimer();
 
         if (finish.didTrigger()) {
