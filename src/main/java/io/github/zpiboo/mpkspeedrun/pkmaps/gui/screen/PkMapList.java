@@ -11,7 +11,6 @@ import io.github.zpiboo.mpkspeedrun.Speedrunner;
 import io.github.zpiboo.mpkspeedrun.pkmaps.core.FinishZone;
 import io.github.zpiboo.mpkspeedrun.pkmaps.core.PkMap;
 import io.github.zpiboo.mpkspeedrun.pkmaps.core.StartZone;
-import io.github.zpiboo.mpkspeedrun.pkmaps.core.TriggerZone;
 import io.github.zpiboo.mpkspeedrun.pkmaps.io.PkMapIO;
 import io.github.zpiboo.mpkspeedrun.util.components.RadioButton;
 import io.github.zpiboo.mpkspeedrun.util.components.RadioButtonGroup;
@@ -92,15 +91,16 @@ public class PkMapList extends ScrollableList<PkMapList.PkMapItem> {
             super(parent);
             this.map = map;
 
-            final PkMap currentMap = Speedrunner.instance.getCurrentMap();
+            final Speedrunner s = Speedrunner.INSTANCE;
+            final PkMap currentMap = s.getCurrentMap();
             boolean isCurrentMap = currentMap != null && Objects.equals(currentMap.getUUID(), map.getUUID());
             if (isCurrentMap)
-                Speedrunner.instance.setCurrentMap(map);
+                s.setCurrentMap(map);
             selectedBtn = new RadioButton(Vector2D.ZERO, radioGroup, isCurrentMap, checked -> {
                 if (checked)
-                    Speedrunner.instance.setCurrentMap(map);
+                    s.setCurrentMap(map);
                 else
-                    Speedrunner.instance.setCurrentMap(null);
+                    s.setCurrentMap(null);
             });
             addChild(selectedBtn);
             selectedBtn.setPos(new Vector2D(5, 5));

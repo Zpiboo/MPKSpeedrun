@@ -49,7 +49,7 @@ public class MPKSpeedrun implements MPKModule {
     }
 
     public void loaded() {
-        EventAPI.addListener(EventAPI.EventListener.onTickStart(Speedrunner.instance::onTickStart));
+        EventAPI.addListener(EventAPI.EventListener.onTickStart(Speedrunner.INSTANCE::onTickStart));
     }
 
     private void addClassesToClassesTxt(Class<?>[] classes) {

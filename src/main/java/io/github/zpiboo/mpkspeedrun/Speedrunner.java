@@ -8,7 +8,7 @@ import io.github.zpiboo.mpkspeedrun.util.misc.KeyBindings;
 
 public class Speedrunner {
     @InfoString.AccessInstance
-    public static final Speedrunner instance = new Speedrunner();
+    public static final Speedrunner INSTANCE = new Speedrunner();
 
     private int groundtime = 0;
     private int runTicks = 0;
