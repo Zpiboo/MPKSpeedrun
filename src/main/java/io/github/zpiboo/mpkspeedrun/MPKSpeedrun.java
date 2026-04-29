@@ -40,7 +40,8 @@ public class MPKSpeedrun implements MPKModule {
                 Speedrunner.class,
                 Timer.class,
                 PkMap.class,
-                TriggerZone.class
+                TriggerZone.class,
+                TriggerZone.TriggerData.class
         });
 
         FileUtil.registerConfigDir("maps");

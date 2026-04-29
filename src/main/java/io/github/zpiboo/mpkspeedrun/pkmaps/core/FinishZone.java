@@ -20,7 +20,7 @@ public class FinishZone extends TriggerZone {
     protected void onTrigger(Player p, Speedrunner s) {
         super.onTrigger(p, s);
 
-        setTickIndicator(
+        getLastTrigger().setTickIndicator(
                 p.isOnGround()
                         ? (int) (API.tickTime - lastLandTick)
                         : -p.getAirtime()

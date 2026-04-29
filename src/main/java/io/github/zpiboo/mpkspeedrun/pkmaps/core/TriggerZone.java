@@ -19,8 +19,7 @@ public class TriggerZone {
     private boolean useLandingPos;
 
     private boolean didTrigger = false;
-    private int lastTickIndicator = 0;
-    private double lastSubtick = 0.0D;
+    protected final TriggerData lastTrigger = new TriggerData();
 
     @SuppressWarnings("unused") public static final TriggerZone ZERO = new TriggerZone();
 
@@ -78,19 +77,8 @@ public class TriggerZone {
         return didTrigger;
     }
     @InfoString.Getter
-    public int getTickIndicator() {
-        return lastTickIndicator;
-    }
-    public void setTickIndicator(int tickIndicator) {
-        lastTickIndicator = tickIndicator;
-    }
-
-    @InfoString.Getter
-    public double getSubtick() {
-        return lastSubtick;
-    }
-    public void setSubtick(double subtick) {
-        lastSubtick = subtick;
+    public TriggerData getLastTrigger() {
+        return lastTrigger;
     }
 
 
@@ -162,16 +150,16 @@ public class TriggerZone {
     public boolean tick(Player p, Speedrunner s) {
         didTrigger = shouldTrigger(p);
 
-        if (didTrigger) {
-            setSubtick(calculateSubtick(p));
+        if (didTrigger)
             onTrigger(p, s);
-        }
 
         return didTrigger;
     }
 
     protected void onTrigger(Player p, Speedrunner s) {
         s.setLastTriggerZone(this);
+
+        lastTrigger.setSubtick(calculateSubtick(p));
     }
 
 
@@ -246,5 +234,27 @@ public class TriggerZone {
 
     protected enum TriggerState {
         GROUNDED, AIRBORNE, NONE
+    }
+
+    @InfoString.DataClass
+    public static class TriggerData {
+        private int tickIndicator = 0;
+        private double subtick = 0.0D;
+
+        @InfoString.Getter
+        public int getTickIndicator() {
+            return tickIndicator;
+        }
+        public void setTickIndicator(int tickIndicator) {
+            this.tickIndicator = tickIndicator;
+        }
+
+        @InfoString.Getter
+        public double getSubtick() {
+            return subtick;
+        }
+        public void setSubtick(double subtick) {
+            this.subtick = subtick;
+        }
     }
 }

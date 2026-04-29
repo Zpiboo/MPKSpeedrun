@@ -17,13 +17,13 @@ public class StartZone extends TriggerZone {
             if (!p.isOnGround()) {
                 lastTriggerState = TriggerState.NONE;
             } else {
-                setTickIndicator((int) (API.tickTime - lastTriggerTime));  // positive
+                getLastTrigger().setTickIndicator((int) (API.tickTime - lastTriggerTime));  // positive
             }
         } else if (lastTriggerState == TriggerState.AIRBORNE) {
             if (p.isOnGround()) {
                 lastTriggerState = TriggerState.NONE;
             }
-            setTickIndicator((int) (lastTriggerTime - API.tickTime));  // negative
+            getLastTrigger().setTickIndicator((int) (lastTriggerTime - API.tickTime));  // negative
         }
 
         return shouldTrigger;
