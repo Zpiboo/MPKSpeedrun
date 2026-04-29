@@ -2,7 +2,6 @@ package io.github.zpiboo.mpkspeedrun.pkmaps.core;
 
 import io.github.kurrycat.mpkmod.compatibility.API;
 import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
-import io.github.zpiboo.mpkspeedrun.Speedrunner;
 import org.json.JSONObject;
 
 public class StartZone extends TriggerZone {
@@ -10,17 +9,17 @@ public class StartZone extends TriggerZone {
     private long lastTriggerTime = -1;
 
     @Override
-    public boolean tick(Player player) {
-        boolean shouldTrigger = super.tick(player);
+    public boolean tick(Player p) {
+        boolean shouldTrigger = super.tick(p);
 
         if (lastTriggerState == TriggerState.GROUNDED) {
-            if (!player.isOnGround()) {
+            if (!p.isOnGround()) {
                 lastTriggerState = TriggerState.NONE;
             } else {
                 setTickIndicator((int) (API.tickTime - lastTriggerTime));  // positive
             }
         } else if (lastTriggerState == TriggerState.AIRBORNE) {
-            if (player.isOnGround()) {
+            if (p.isOnGround()) {
                 lastTriggerState = TriggerState.NONE;
             }
             setTickIndicator((int) (lastTriggerTime - API.tickTime));  // negative
@@ -30,10 +29,10 @@ public class StartZone extends TriggerZone {
     }
 
     @Override
-    protected void onTrigger(Player player) {
-        super.onTrigger(player);
+    protected void onTrigger(Player p) {
+        super.onTrigger(p);
 
-        lastTriggerState = player.isOnGround()
+        lastTriggerState = p.isOnGround()
                 ? TriggerState.GROUNDED
                 : TriggerState.AIRBORNE;
 

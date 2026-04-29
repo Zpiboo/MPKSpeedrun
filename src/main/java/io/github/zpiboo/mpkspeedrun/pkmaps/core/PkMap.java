@@ -1,13 +1,15 @@
 package io.github.zpiboo.mpkspeedrun.pkmaps.core;
 
+import io.github.kurrycat.mpkmod.compatibility.MCClasses.Player;
 import io.github.kurrycat.mpkmod.gui.components.Anchor;
 import io.github.kurrycat.mpkmod.gui.components.ComponentHolder;
 import io.github.kurrycat.mpkmod.gui.infovars.InfoString;
 import io.github.kurrycat.mpkmod.util.Vector2D;
 import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
+import io.github.zpiboo.mpkspeedrun.Speedrunner;
+import io.github.zpiboo.mpkspeedrun.Timer;
 import io.github.zpiboo.mpkspeedrun.pkmaps.gui.editor.ConfigPane;
 import io.github.zpiboo.mpkspeedrun.pkmaps.gui.screen.PkMapsGUIScreen;
-import io.github.zpiboo.mpkspeedrun.pkmaps.io.PkMapIO;
 import org.json.JSONObject;
 
 import java.util.UUID;
@@ -129,5 +131,32 @@ public class PkMap implements Comparable<PkMap> {
 
     public void openConfigPane(PkMapsGUIScreen parentScreen) {
         parentScreen.openPane(createConfigPane(parentScreen));
+    }
+
+    public void tick(Player p, Speedrunner s) {
+        start.tick(p);
+        finish.tick(p);
+
+        Timer timer = s.getTimer();
+
+        if (timer.isEnabled())
+            timedTick(p, s);
+
+        if (start.shouldTrigger()) {
+            timer.setTimeInTicks(getStartTime());
+            timer.setSubtick(-start.getSubtick());
+            timer.setEnabled(true);
+        }
+    }
+
+    private void timedTick(Player p, Speedrunner s) {
+        Timer timer = s.getTimer();
+
+        if (finish.shouldTrigger()) {
+            timer.setEnabled(false);
+            timer.setSubtick(timer.getSubtick() + finish.getSubtick());
+        } else {
+            timer.increment();
+        }
     }
 }

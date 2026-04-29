@@ -17,7 +17,7 @@ public class TriggerZone {
     private PosMode posMode;
     private boolean useLandingPos;
 
-    public boolean shouldTrigger = false;
+    private boolean shouldTrigger = false;
     private int lastTickIndicator = 0;
     private double lastSubtick = 0.0D;
 
@@ -73,6 +73,9 @@ public class TriggerZone {
         this.useLandingPos = useLandingPos;
     }
 
+    public boolean shouldTrigger() {
+        return shouldTrigger;
+    }
     @InfoString.Getter
     public int getTickIndicator() {
         return lastTickIndicator;
@@ -90,23 +93,23 @@ public class TriggerZone {
     }
 
 
-    private Vector3D getAdaptedPos(Player player) {
+    private Vector3D getAdaptedPos(Player p) {
         return useLandingPos
-                ? PlayerUtil.getLandingPos(player)
-                : player.getPos();
+                ? PlayerUtil.getLandingPos(p)
+                : p.getPos();
     }
-    private BoundingBox3D getAdaptedBB(Player player) {
+    private BoundingBox3D getAdaptedBB(Player p) {
         return useLandingPos
-                ? PlayerUtil.getLandingBB(player)
-                : player.getBoundingBox();
+                ? PlayerUtil.getLandingBB(p)
+                : p.getBoundingBox();
     }
 
-    private double calculateSubtick(Player player) {
+    private double calculateSubtick(Player p) {
         // TODO: Implement subtick calculation for BOX position mode
         if (posMode != PosMode.POS) return 0.0D;
 
-        Vector3D lastPos = getAdaptedPos(player.getPrevious());
-        Vector3D currPos = getAdaptedPos(player);
+        Vector3D lastPos = getAdaptedPos(p.getPrevious());
+        Vector3D currPos = getAdaptedPos(p);
 
         switch (triggerMode) {
             case ENTER:
@@ -126,11 +129,11 @@ public class TriggerZone {
         }
     }
 
-    private boolean shouldTrigger(Player player) {
-        Vector3D currPos = getAdaptedPos(player);
-        Vector3D lastPos = getAdaptedPos(player.getPrevious());
-        BoundingBox3D currBb = getAdaptedBB(player);
-        BoundingBox3D lastBb = getAdaptedBB(player.getPrevious());
+    private boolean shouldTrigger(Player p) {
+        Vector3D currPos = getAdaptedPos(p);
+        Vector3D lastPos = getAdaptedPos(p.getPrevious());
+        BoundingBox3D currBb = getAdaptedBB(p);
+        BoundingBox3D lastBb = getAdaptedBB(p.getPrevious());
 
         switch (triggerMode) {
             case ENTER:
@@ -155,18 +158,18 @@ public class TriggerZone {
         }
     }
 
-    public boolean tick(Player player) {
-        shouldTrigger = shouldTrigger(player);
+    public boolean tick(Player p) {
+        shouldTrigger = shouldTrigger(p);
 
         if (shouldTrigger) {
-            setSubtick(calculateSubtick(player));
-            onTrigger(player);
+            setSubtick(calculateSubtick(p));
+            onTrigger(p);
         }
 
         return shouldTrigger;
     }
 
-    protected void onTrigger(Player player) {}
+    protected void onTrigger(Player p) {}
 
 
     public JSONObject toJson() {

@@ -8,22 +8,22 @@ public class FinishZone extends TriggerZone {
     private long lastLandTick = -1;
 
     @Override
-    public boolean tick(Player player) {
-        if (player.landTick)
+    public boolean tick(Player p) {
+        if (p.landTick)
             lastLandTick = API.tickTime;
 
 
-        return super.tick(player);
+        return super.tick(p);
     }
 
     @Override
-    protected void onTrigger(Player player) {
-        super.onTrigger(player);
+    protected void onTrigger(Player p) {
+        super.onTrigger(p);
 
         setTickIndicator(
-                player.isOnGround()
+                p.isOnGround()
                         ? (int) (API.tickTime - lastLandTick)
-                        : -player.getAirtime()
+                        : -p.getAirtime()
         );
     }
 
