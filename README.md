@@ -83,9 +83,11 @@ If you're curious, you can check [actions](https://github.com/Zpiboo/MPKSpeedrun
 (keep in mind that snapshots are unstable versions, so expect them to have more bugs than the latest release).
 
 ## Planned features
+- Map splits
 - Map folders
-- Dynamic maps (configs automatically for each server, for example it would set the end box to the gold pressure plate automatically on hollowcube
-- Ladder utilities (not sure exactly what yet)
+- Dynamic maps (automatic per-server config, for instance on hollowcube we would make it set the end box to the gold pressure plate)
+- Ladder utilities (airtime)
+- Spherical zones for start/finish (center + radius)
 
 ## Support
 If you find a bug or want to request a new feature, feel free to [create an issue](https://github.com/Zpiboo/MPKSpeedrun/issues)
