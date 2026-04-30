@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'io.github.zpiboo.mpkspeedrun'
-version = '1.0.0'
+version = '1.0.1'
 
 var mainClassPath = 'io.github.zpiboo.mpkspeedrun.MPKSpeedrun'
 
@@ -25,6 +25,11 @@ dependencies {
 
 configurations {
     shaded { extendsFrom implementation }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 shadowJar {
