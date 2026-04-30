@@ -82,6 +82,11 @@ in the `mpkmodules` directory located in your `mods` folder (you might need to c
 If you're curious, you can check [actions](https://github.com/Zpiboo/MPKSpeedrun/actions) to download snapshots and test new features
 (keep in mind that snapshots are unstable versions, so expect them to have more bugs than the latest release).
 
+## Planned features
+- Map folders
+- Dynamic maps (configs automatically for each server, for example it would set the end box to the gold pressure plate automatically on hollowcube
+- Ladder utilities (not sure exactly what yet)
+
 ## Support
 If you find a bug or want to request a new feature, feel free to [create an issue](https://github.com/Zpiboo/MPKSpeedrun/issues)
 where you explain your problem clearly and what should change.
