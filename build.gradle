@@ -27,6 +27,11 @@ configurations {
     shaded { extendsFrom implementation }
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 shadowJar {
     archiveBaseName.set('mpkspeedrun')
     archiveVersion.set(version.toString())
