@@ -8,7 +8,6 @@ import io.github.zpiboo.mpkspeedrun.MPKSpeedrun;
 import io.github.zpiboo.mpkspeedrun.Speedrunner;
 import io.github.zpiboo.mpkspeedrun.util.api_compat.BoundingBox3DUtil;
 import io.github.zpiboo.mpkspeedrun.util.api_compat.PlayerUtil;
-import io.github.zpiboo.mpkspeedrun.util.api_compat.Vector3DUtil;
 import io.github.zpiboo.mpkspeedrun.util.misc.ChoiceEnum;
 import org.json.JSONObject;
 

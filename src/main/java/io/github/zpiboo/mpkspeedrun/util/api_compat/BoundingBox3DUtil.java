@@ -41,7 +41,10 @@ public class BoundingBox3DUtil {
         return posSubtick(
                 new Vector3D(start.midX(), start.midY(), start.midZ()),
                 new Vector3D(end.midX(), end.midY(), end.midZ()),
-                box.expand(0.3F)
+                new BoundingBox3D(
+                        new Vector3D(start.minX() - 0.3F, start.minY(), start.minZ() - 0.3F),
+                        new Vector3D(start.maxX() + 0.3F, start.maxY(), start.maxZ() + 0.3F)
+                )
         );
     }
 }
