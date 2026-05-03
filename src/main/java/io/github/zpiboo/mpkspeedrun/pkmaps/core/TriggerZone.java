@@ -148,13 +148,11 @@ public class TriggerZone {
         }
     }
 
-    public boolean tick(Player p, Speedrunner s) {
+    public void tick(Player p, Speedrunner s) {
         didTrigger = shouldTrigger(p);
 
         if (didTrigger)
             onTrigger(p, s);
-
-        return didTrigger;
     }
 
     protected void onTrigger(Player p, Speedrunner s) {
