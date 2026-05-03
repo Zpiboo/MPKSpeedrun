@@ -95,25 +95,45 @@ public class TriggerZone {
     }
 
     private double calculateSubtick(Player p) {
-        // TODO: Implement subtick calculation for BOX position mode
-        if (posMode != PosMode.POS) return 0.0D;
+        switch (posMode) {
+            case POS:
+                Vector3D lastPos = getAdaptedPos(p.getPrevious());
+                Vector3D currPos = getAdaptedPos(p);
+                switch (triggerMode) {
+                    case ENTER:
+                        return BoundingBox3DUtil.posSubtick(
+                                lastPos,
+                                currPos,
+                                this.getBox()
+                        );
+                    case EXIT:
+                        return 1.0D - BoundingBox3DUtil.posSubtick(
+                                currPos,
+                                lastPos,
+                                this.getBox()
+                        );
 
-        Vector3D lastPos = getAdaptedPos(p.getPrevious());
-        Vector3D currPos = getAdaptedPos(p);
+                    default: break;
+                }
+            case BOX:
+                BoundingBox3D lastBB = getAdaptedBB(p.getPrevious());
+                BoundingBox3D currBB = getAdaptedBB(p);
+                switch (triggerMode) {
+                    case ENTER:
+                        return BoundingBox3DUtil.boxSubtick(
+                                lastBB,
+                                currBB,
+                                this.getBox()
+                        );
+                    case EXIT:
+                        return 1.0D - BoundingBox3DUtil.boxSubtick(
+                                currBB,
+                                lastBB,
+                                this.getBox()
+                        );
 
-        switch (triggerMode) {
-            case ENTER:
-                return BoundingBox3DUtil.slabMethod(
-                        lastPos,
-                        currPos,
-                        this.getBox()
-                );
-            case EXIT:
-                return 1.0D - BoundingBox3DUtil.slabMethod(
-                        currPos,
-                        lastPos,
-                        this.getBox()
-                );
+                    default: break;
+                }
 
             default: return 0.0D;
         }
@@ -158,29 +178,15 @@ public class TriggerZone {
     protected void onTrigger(Player p, Speedrunner s) {
         s.setLastTrigger(this.lastTrigger);
 
-        lastTrigger.setSubtick(calculateSubtick(p));
+        double subtick = calculateSubtick(p);
+        lastTrigger.setSubtick(subtick);
 
-        double currOffset = calculateOffset(p);
-        double prevOffset = calculateOffset(p.getPrevious());
-        lastTrigger.setMadeByOffset(currOffset);
-        lastTrigger.setMissedByOffset(prevOffset);
-    }
+        Vector3D lastPos = getAdaptedPos(p.getPrevious());
+        Vector3D currPos = getAdaptedPos(p);
+        double totalDistance = currPos.sub(lastPos).lengthXZ();
 
-    protected double calculateOffset(Player p) {
-        BoundingBox3D bb;
-        switch (getPosMode()) {
-            case BOX:
-                bb = getAdaptedBB(p);
-                break;
-
-            case POS:
-            default:
-                Vector3D pos = getAdaptedPos(p);
-                bb = new BoundingBox3D(pos, pos);
-                break;
-        }
-        Vector3D offset3d = getBox().distanceTo(bb).mult(-1);
-        return Vector3DUtil.xzOffset(offset3d);
+        lastTrigger.setMadeByOffset(totalDistance * (1 - subtick));
+        lastTrigger.setMissedByOffset(totalDistance * subtick);
     }
 
 
