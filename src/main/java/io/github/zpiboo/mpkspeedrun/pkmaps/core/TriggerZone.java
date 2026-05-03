@@ -208,16 +208,8 @@ public class TriggerZone {
     }
 
     protected void applyJson(JSONObject boxJson) {
-        String legacyModeString = boxJson.optString("mode");  // TODO: remove this for the first release (v1.0.0!!!) (after beta test)
-
         String triggerModeString = boxJson.optString("trigger_on");
         String posModeString = boxJson.optString("pos_mode");
-
-        String[] modes = legacyModeString.split("_");
-        if (!legacyModeString.isEmpty() && modes.length == 2) {
-            triggerModeString = modes[1];
-            posModeString = modes[0];
-        }
 
         TriggerMode triggerMode;
         PosMode posMode;
