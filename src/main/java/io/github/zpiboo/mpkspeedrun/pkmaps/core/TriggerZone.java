@@ -178,29 +178,15 @@ public class TriggerZone {
     protected void onTrigger(Player p, Speedrunner s) {
         s.setLastTrigger(this.lastTrigger);
 
-        lastTrigger.setSubtick(calculateSubtick(p));
+        double subtick = calculateSubtick(p);
+        lastTrigger.setSubtick(subtick);
 
-        double currOffset = calculateOffset(p);
-        double prevOffset = calculateOffset(p.getPrevious());
-        lastTrigger.setMadeByOffset(currOffset);
-        lastTrigger.setMissedByOffset(prevOffset);
-    }
+        Vector3D lastPos = getAdaptedPos(p.getPrevious());
+        Vector3D currPos = getAdaptedPos(p);
+        double totalDistance = currPos.sub(lastPos).lengthXZ();
 
-    protected double calculateOffset(Player p) {
-        BoundingBox3D bb;
-        switch (getPosMode()) {
-            case BOX:
-                bb = getAdaptedBB(p);
-                break;
-
-            case POS:
-            default:
-                Vector3D pos = getAdaptedPos(p);
-                bb = new BoundingBox3D(pos, pos);
-                break;
-        }
-        Vector3D offset3d = getBox().distanceTo(bb).mult(-1);
-        return Vector3DUtil.xzOffset(offset3d);
+        lastTrigger.setMadeByOffset(totalDistance * (1 - subtick));
+        lastTrigger.setMissedByOffset(totalDistance * subtick);
     }
 
 
