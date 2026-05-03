@@ -103,13 +103,13 @@ public class TriggerZone {
 
         switch (triggerMode) {
             case ENTER:
-                return BoundingBox3DUtil.slabMethod(
+                return BoundingBox3DUtil.posSubtick(
                         lastPos,
                         currPos,
                         this.getBox()
                 );
             case EXIT:
-                return 1.0D - BoundingBox3DUtil.slabMethod(
+                return 1.0D - BoundingBox3DUtil.posSubtick(
                         currPos,
                         lastPos,
                         this.getBox()
