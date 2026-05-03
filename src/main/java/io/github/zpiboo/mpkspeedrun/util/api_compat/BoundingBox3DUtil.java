@@ -36,4 +36,12 @@ public class BoundingBox3DUtil {
                 XZGeometry.xzBox(box)
         );
     }
+
+    public static double boxSubtick(BoundingBox3D start, BoundingBox3D end, BoundingBox3D box) {
+        return posSubtick(
+                new Vector3D(start.midX(), start.midY(), start.midZ()),
+                new Vector3D(end.midX(), end.midY(), end.midZ()),
+                box.expand(0.3F)
+        );
+    }
 }

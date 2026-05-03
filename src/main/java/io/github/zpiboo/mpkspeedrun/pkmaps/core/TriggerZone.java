@@ -95,25 +95,45 @@ public class TriggerZone {
     }
 
     private double calculateSubtick(Player p) {
-        // TODO: Implement subtick calculation for BOX position mode
-        if (posMode != PosMode.POS) return 0.0D;
+        switch (posMode) {
+            case POS:
+                Vector3D lastPos = getAdaptedPos(p.getPrevious());
+                Vector3D currPos = getAdaptedPos(p);
+                switch (triggerMode) {
+                    case ENTER:
+                        return BoundingBox3DUtil.posSubtick(
+                                lastPos,
+                                currPos,
+                                this.getBox()
+                        );
+                    case EXIT:
+                        return 1.0D - BoundingBox3DUtil.posSubtick(
+                                currPos,
+                                lastPos,
+                                this.getBox()
+                        );
 
-        Vector3D lastPos = getAdaptedPos(p.getPrevious());
-        Vector3D currPos = getAdaptedPos(p);
+                    default: break;
+                }
+            case BOX:
+                BoundingBox3D lastBB = getAdaptedBB(p.getPrevious());
+                BoundingBox3D currBB = getAdaptedBB(p);
+                switch (triggerMode) {
+                    case ENTER:
+                        return BoundingBox3DUtil.boxSubtick(
+                                lastBB,
+                                currBB,
+                                this.getBox()
+                        );
+                    case EXIT:
+                        return 1.0D - BoundingBox3DUtil.boxSubtick(
+                                currBB,
+                                lastBB,
+                                this.getBox()
+                        );
 
-        switch (triggerMode) {
-            case ENTER:
-                return BoundingBox3DUtil.posSubtick(
-                        lastPos,
-                        currPos,
-                        this.getBox()
-                );
-            case EXIT:
-                return 1.0D - BoundingBox3DUtil.posSubtick(
-                        currPos,
-                        lastPos,
-                        this.getBox()
-                );
+                    default: break;
+                }
 
             default: return 0.0D;
         }
