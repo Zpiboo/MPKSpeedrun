@@ -54,6 +54,7 @@ public class Speedrunner {
     }
     public void setCurrentMap(PkMap map) {
         currentMap = map;
+        lastTrigger = new TriggerZone.TriggerData();
         timer.reset();
         timer.setEnabled(false);
     }
