@@ -129,6 +129,8 @@ public class PkMap implements Comparable<PkMap> {
             timer.reset();
             timer.setSubtick(-start.getLastTrigger().getSubtick());
             timer.setEnabled(true);
+
+            if (start.countTriggerTick()) timer.increment();
         }
     }
 
@@ -137,6 +139,8 @@ public class PkMap implements Comparable<PkMap> {
         Timer timer = s.getTimer();
 
         if (finish.didTrigger()) {
+            if (finish.countTriggerTick()) timer.increment();
+
             timer.setEnabled(false);
             timer.setSubtick(timer.getSubtick() + finish.getLastTrigger().getSubtick());
         } else {

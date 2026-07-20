@@ -10,6 +10,11 @@ public class StartZone extends TriggerZone {
     private long lastTriggerTime = -1;
 
     @Override
+    public boolean countTriggerTickDefault() {
+        return true;
+    }
+
+    @Override
     public void tick(Player p, Speedrunner s) {
         super.tick(p, s);
 

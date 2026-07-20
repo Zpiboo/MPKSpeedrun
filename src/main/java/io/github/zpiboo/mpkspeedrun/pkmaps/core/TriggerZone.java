@@ -17,6 +17,7 @@ public class TriggerZone {
     private TriggerMode triggerMode;
     private PosMode posMode;
     private boolean useLandingPos;
+    private boolean countTriggerTick;
 
     private boolean didTrigger = false;
     protected final TriggerData lastTrigger = new TriggerData();
@@ -35,6 +36,7 @@ public class TriggerZone {
         this.triggerMode = triggerMode;
         this.posMode = posMode;
         this.useLandingPos = useLandingPos;
+        this.countTriggerTick = countTriggerTickDefault();
     }
     public TriggerZone() {
         this(BoundingBox3D.ZERO, TriggerMode.ENTER, PosMode.POS, false);
@@ -72,6 +74,19 @@ public class TriggerZone {
     public void setUsingLandingPos(boolean useLandingPos) {
         this.useLandingPos = useLandingPos;
     }
+
+    @InfoString.Getter
+    public boolean countTriggerTick() {
+        return countTriggerTick;
+    }
+    public void setCountTriggerTick(boolean countTriggerTick) {
+        this.countTriggerTick = countTriggerTick;
+    }
+
+    public boolean countTriggerTickDefault() {
+        return false;
+    }
+
 
     public boolean didTrigger() {
         return didTrigger;
@@ -194,6 +209,7 @@ public class TriggerZone {
                 .put("trigger_on", triggerMode.toString())
                 .put("pos_mode", posMode.toString())
                 .put("use_landing_pos", useLandingPos)
+                .put("count_trigger_tick", countTriggerTick)
 
                 .put("minx", box.minX())
                 .put("miny", box.minY())
@@ -231,6 +247,7 @@ public class TriggerZone {
         }
 
         boolean useLandingPos = boxJson.optBoolean("use_landing_pos", false);
+        boolean countTriggerTick = boxJson.optBoolean("count_trigger_tick", countTriggerTickDefault());
 
         double minX = boxJson.optDouble("minx", 0);
         double minY = boxJson.optDouble("miny", 0);
@@ -248,6 +265,7 @@ public class TriggerZone {
         this.setTriggerMode(triggerMode);
         this.setPosMode(posMode);
         this.setUsingLandingPos(useLandingPos);
+        this.setCountTriggerTick(countTriggerTick);
     }
 
     protected enum TriggerState {
