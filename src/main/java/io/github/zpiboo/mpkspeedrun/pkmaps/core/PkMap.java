@@ -119,10 +119,6 @@ public class PkMap implements Comparable<PkMap> {
                 : nameCmp;
     }
 
-    public boolean equals(PkMap other) {
-        return this.uuid.equals(other.uuid);
-    }
-
     private ConfigPane createConfigPane(ComponentHolder parent) {
         ConfigPane newPane = new ConfigPane(this, Vector2D.ZERO, new Vector2D(3 / 7D, 0));
         parent.passPositionTo(newPane, ComponentHolder.PERCENT.X, Anchor.CENTER);
